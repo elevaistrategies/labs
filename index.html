@@ -264,6 +264,16 @@
         0 0 18px rgba(245,158,11,0.20);
     }
 
+    /* BETA: cool cyan glow */
+    .status.beta{
+      border-color: rgba(34,211,238,0.70);
+      color: #cffafe;
+      background: rgba(34,211,238,0.10);
+      box-shadow:
+        0 0 0 3px rgba(34,211,238,0.10),
+        0 0 18px rgba(34,211,238,0.22);
+    }
+
     /* Optional: PAUSED */
     .status.paused{
       border-color: rgba(168,85,247,0.70);
@@ -320,7 +330,13 @@
       color: #6b7280;
       font-size: 0.85rem;
     }
-  </style>
+  
+    @keyframes bannerPulse{
+      0%,100%{ filter: brightness(1); }
+      50%{ filter: brightness(1.15); }
+    }
+    .banner{ animation: bannerPulse 3.2s ease-in-out infinite; }
+</style>
 </head>
 <body>
 
