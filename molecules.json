@@ -1,0 +1,18 @@
+[
+  {
+    "id": "snack-to-workout",
+    "name": "Snack → Workout Converter",
+    "category": "Fitness",
+    "description": "Convert snack calories into equivalent workouts.",
+    "url": "#",
+    "status": "beta"
+  },
+  {
+    "id": "shower-thoughts",
+    "name": "Shower Thought Generator",
+    "category": "Mindset",
+    "description": "Random thoughts that range from funny to philosophical.",
+    "url": "#",
+    "status": "wip"
+  }
+]
