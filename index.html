@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>ElevAI Labs🥼🧪</title>
+  <title>ElevAI Labs 🥼🧪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     body {
@@ -11,57 +11,57 @@
       background: #0b0f14;
       color: #e6e8eb;
     }
+
     header {
-      padding: 4rem 2rem;
+      padding: 4rem 2rem 3rem;
       text-align: center;
     }
+
     h1 {
       font-size: 3rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
     }
+
     p {
       color: #9aa4b2;
       max-width: 640px;
       margin: 0 auto;
+      line-height: 1.6;
     }
+
+    .button {
+      display: inline-block;
+      margin-top: 1.75rem;
+      color: #0b0f14;
+      background: #7dd3fc;
+      padding: 0.65rem 1.1rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    /* 🚧 Construction banner */
+    .banner {
+      background: linear-gradient(90deg, #121824, #0f1520);
+      border-top: 1px solid #263041;
+      border-bottom: 1px solid #263041;
+      color: #e6e8eb;
+      text-align: center;
+      padding: 0.9rem 1rem;
+      font-size: 0.95rem;
+    }
+
+    .banner span {
+      color: #7dd3fc;
+      font-weight: 800;
+    }
+
     main {
       padding: 2rem;
       max-width: 1100px;
       margin: 0 auto;
     }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-    .card {
-      background: #121824;
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid #1e2633;
-    }
-    .tag {
-      display: inline-block;
-      font-size: 0.75rem;
-      color: #7dd3fc;
-      margin-bottom: 0.5rem;
-    }
-    .button {
-      display: inline-block;
-      margin-top: 1.5rem;
-      color: #0b0f14;
-      background: #7dd3fc;
-      padding: 0.6rem 1rem;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    footer {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #6b7280;
-      font-size: 0.85rem;
-    }
+
     .controls {
       display: flex;
       gap: 1rem;
@@ -70,6 +70,7 @@
       margin-bottom: 1rem;
       flex-wrap: wrap;
     }
+
     #search {
       flex: 1;
       min-width: 240px;
@@ -80,14 +81,17 @@
       border-radius: 10px;
       outline: none;
     }
+
     #search::placeholder {
       color: #6b7280;
     }
+
     .filters {
       display: flex;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
+
     .filter {
       background: #0f1520;
       border: 1px solid #1e2633;
@@ -98,16 +102,32 @@
       font-weight: 600;
       font-size: 0.85rem;
     }
+
     .filter.active {
       background: #7dd3fc;
       color: #0b0f14;
       border-color: #7dd3fc;
     }
+
     .statusLine {
       color: #9aa4b2;
       margin: 0.5rem 0 1.25rem;
       font-size: 0.9rem;
     }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: #121824;
+      border-radius: 12px;
+      padding: 1.5rem;
+      border: 1px solid #1e2633;
+    }
+
     .cardTop {
       display: flex;
       align-items: center;
@@ -115,6 +135,12 @@
       gap: 0.75rem;
       margin-bottom: 0.75rem;
     }
+
+    .tag {
+      font-size: 0.75rem;
+      color: #7dd3fc;
+    }
+
     .status {
       font-size: 0.7rem;
       padding: 0.25rem 0.5rem;
@@ -123,21 +149,25 @@
       color: #cbd5e1;
       background: #0f1520;
     }
-    .button.disabled {
-      background: #2a3442;
-      color: #9aa4b2;
-      cursor: not-allowed;
-    }
+
     .cardActions {
       display: flex;
       gap: 0.75rem;
       align-items: center;
     }
+
     .link {
       color: #7dd3fc;
       text-decoration: none;
       font-weight: 700;
     }
+
+    .button.disabled {
+      background: #2a3442;
+      color: #9aa4b2;
+      cursor: not-allowed;
+    }
+
     .empty {
       color: #9aa4b2;
       padding: 1.5rem;
@@ -145,21 +175,33 @@
       border-radius: 12px;
       background: #0f1520;
     }
+
+    footer {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #6b7280;
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>ElevAI Labs</h1>
+  <h1>ElevAI Labs 🧪</h1>
   <p>
-    A modular lab of experiments, tools, and small apps (“molecules”)
-    built to explore ideas.
+    A modular lab of experiments, tools, and small apps (“molecules”) ⚗️  
+    built to explore ideas, test hypotheses, and ship fast.
   </p>
 
   <a href="./submit/" class="button">
-    Submit an App Idea
+    Submit an App Idea 💡
   </a>
 </header>
+
+<div class="banner">
+  🚧 <span>Site Under Construction</span> 🥼 — New molecules are being engineered.  
+  Check back soon to watch the lab evolve 🧬🚀
+</div>
 
 <main>
   <div class="controls">
@@ -167,7 +209,7 @@
     <div id="filters" class="filters"></div>
   </div>
 
-  <div id="statusLine" class="statusLine">Loading…</div>
+  <div id="statusLine" class="statusLine">Loading experiments… 🔬</div>
 
   <section id="moleculeGrid" class="grid"></section>
 </main>
@@ -175,7 +217,7 @@
 <script src="labs.js"></script>
 
 <footer>
-  © ElevAI Labs • 
+  © ElevAI Labs 🧠 • Built in Public 🛠️
 </footer>
 
 </body>
