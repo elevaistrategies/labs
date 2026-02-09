@@ -1,5 +1,5 @@
 // ElevAI Labs — molecules renderer (no frameworks, no build step)
-// Upgraded: status classes + emoji labels + highlight search + deep links + copy link + nice UX
+// Enhanced: status classes + emoji labels + highlight search + deep links + copy link + URL params + polished UX
 
 function slugify(str) {
   return String(str)
@@ -23,7 +23,7 @@ function normStatus(status) {
   const s = String(status || "").trim().toLowerCase();
   if (!s) return { key: "live", label: "LIVE", emoji: "✅" };
 
-  if (["live", "launched", "ship", "shipped", "public"].includes(s))
+  if (["live", "launched", "shipped", "public"].includes(s))
     return { key: "live", label: "LIVE", emoji: "✅" };
 
   if (["wip", "work in progress", "in progress", "building"].includes(s))
@@ -38,13 +38,11 @@ function normStatus(status) {
   if (["archived", "dead", "retired"].includes(s))
     return { key: "archived", label: "ARCHIVED", emoji: "🧊" };
 
-  // unknown becomes its own label (no class styling unless you add CSS)
   return { key: s.replace(/\s+/g, "-"), label: s.toUpperCase(), emoji: "⚙️" };
 }
 
 function badge(status) {
   const s = normStatus(status);
-  // class controls glow; data-status is still handy for debugging/filtering later
   return `<span class="status ${escapeHtml(s.key)}" data-status="${escapeHtml(s.key)}">${escapeHtml(s.emoji)} ${escapeHtml(s.label)}</span>`;
 }
 
@@ -66,11 +64,9 @@ function highlight(text, query) {
   const q = String(query || "").trim();
   if (!q) return escapeHtml(t);
 
-  // Escape for regex safely
   const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const re = new RegExp(safe, "ig");
 
-  // Highlight in HTML without breaking existing escaping
   return escapeHtml(t).replace(re, (m) => `<mark style="
     background: rgba(125,211,252,0.20);
     color: inherit;
@@ -81,7 +77,6 @@ function highlight(text, query) {
 }
 
 function copyToClipboard(text) {
-  // modern clipboard + fallback
   if (navigator.clipboard && navigator.clipboard.writeText) {
     return navigator.clipboard.writeText(text);
   }
@@ -144,16 +139,14 @@ function renderCards(molecules, category, query) {
       ? `<a class="button" href="${escapeHtml(url)}" target="_blank" rel="noopener">Launch 🚀</a>`
       : `<span class="button disabled" title="URL not set yet">Launch ⏳</span>`;
 
-    // Optional: allow an "idea" link to the related GitHub intake issue (if you add it)
-    const ideaLink = m.idea
-      ? `<a class="link" href="${escapeHtml(m.idea)}" target="_blank" rel="noopener">Idea 🧠</a>`
-      : "";
-
     const repoLink = m.repo
       ? `<a class="link" href="${escapeHtml(m.repo)}" target="_blank" rel="noopener">GitHub 🧾</a>`
       : "";
 
-    // Copy deep link (same page + #id)
+    const ideaLink = m.idea
+      ? `<a class="link" href="${escapeHtml(m.idea)}" target="_blank" rel="noopener">Idea 🧠</a>`
+      : "";
+
     const copyBtn = `<a class="link" href="#${id}" data-copylink="${id}" title="Copy link">Copy 🔗</a>`;
 
     return `
@@ -191,7 +184,6 @@ function setQueryParams({ cat, q }) {
   if (q && q.trim()) url.searchParams.set("q", q.trim());
   else url.searchParams.delete("q");
 
-  // Keep hash intact
   history.replaceState(null, "", url.toString());
 }
 
@@ -216,33 +208,26 @@ async function init() {
     if (!res.ok) throw new Error(`Could not load molecules.json (${res.status})`);
     const molecules = await res.json();
 
-    // Derive categories, render filter buttons
     const categories = getCategories(molecules);
     renderFilters(categories);
 
-    // Read incoming URL params (deep-link)
     const qp = getQueryParams();
     let currentCategory = qp.cat && categories.includes(qp.cat) ? qp.cat : "All";
     let currentQuery = qp.q || "";
 
-    // Set initial UI state
     search.value = currentQuery;
 
-    // Activate matching filter pill
     document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
     const btn = Array.from(document.querySelectorAll("button[data-cat]"))
       .find(b => (b.getAttribute("data-cat") || "") === currentCategory);
     if (btn) btn.classList.add("active");
     else document.querySelector(".filter")?.classList.add("active");
 
-    // Initial render
     renderCards(molecules, currentCategory, currentQuery);
     statusEl.textContent = `${molecules.length} molecule${molecules.length === 1 ? "" : "s"} loaded. 🧬`;
 
-    // Scroll to hash if present
     scrollToHashAndPulse();
 
-    // Filter click
     filters.addEventListener("click", (e) => {
       const btn = e.target.closest("button[data-cat]");
       if (!btn) return;
@@ -255,17 +240,13 @@ async function init() {
       renderCards(molecules, currentCategory, currentQuery);
       setQueryParams({ cat: currentCategory, q: currentQuery });
 
-      // Small pulse on first card for feedback
       const firstCard = document.querySelector(".card");
       pulseElement(firstCard);
     });
 
-    // Search input
     let searchTimer = null;
     search.addEventListener("input", (e) => {
       currentQuery = e.target.value || "";
-
-      // debounce slightly
       clearTimeout(searchTimer);
       searchTimer = setTimeout(() => {
         renderCards(molecules, currentCategory, currentQuery);
@@ -273,7 +254,6 @@ async function init() {
       }, 80);
     });
 
-    // Copy link handler (event delegation)
     document.querySelector("#moleculeGrid").addEventListener("click", async (e) => {
       const a = e.target.closest("a[data-copylink]");
       if (!a) return;
@@ -293,7 +273,6 @@ async function init() {
       }
     });
 
-    // If hash changes (manual), scroll/pulse
     window.addEventListener("hashchange", scrollToHashAndPulse);
 
   } catch (err) {
