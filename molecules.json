@@ -1,13 +1,13 @@
 [
-  {
-    "id": "snack-to-workout",
-    "name": "Snack → Workout Converter",
-    "category": "Fitness",
-    "description": "Convert snack calories into equivalent workouts.",
-    "url": "#",
-    "repo": "https://github.com/elevaistrategies/molecule-snack-to-workout",
-    "status": "beta"
-  },
+{
+  "id": "snack-to-workout",
+  "name": "Snack → Workout Converter",
+  "category": "Fitness",
+  "description": "Convert snack calories into equivalent workouts.",
+  "url": "https://elevaistrategies.github.io/molecule-snack-to-workout/",
+  "repo": "https://github.com/elevaistrategies/molecule-snack-to-workout",
+  "status": "live"
+},
   {
     "id": "shower-thoughts",
     "name": "Shower Thought Generator",
