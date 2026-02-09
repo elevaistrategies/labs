@@ -5,6 +5,7 @@
     "category": "Fitness",
     "description": "Convert snack calories into equivalent workouts.",
     "url": "#",
+    "repo": "https://github.com/elevaistrategies/molecule-snack-to-workout",
     "status": "beta"
   },
   {
