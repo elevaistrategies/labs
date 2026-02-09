@@ -5,55 +5,101 @@
   <title>ElevAI Labs 🥼🧪</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
+    :root{
+      --bg:#0b0f14;
+      --panel:#121824;
+      --panel2:#0f1520;
+      --border:#1e2633;
+      --muted:#9aa4b2;
+      --text:#e6e8eb;
+      --accent:#7dd3fc;
+
+      /* Status colors */
+      --live:#22c55e;      /* green */
+      --wip:#f59e0b;       /* amber */
+      --paused:#a855f7;    /* purple */
+      --dead:#ef4444;      /* red */
+    }
+
     body {
       margin: 0;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0b0f14;
-      color: #e6e8eb;
+      background: radial-gradient(1200px 600px at 50% -200px, #162036 0%, var(--bg) 55%);
+      color: var(--text);
     }
 
     header {
-      padding: 4rem 2rem 3rem;
+      padding: 4rem 2rem 2.5rem;
       text-align: center;
     }
 
     h1 {
-      font-size: 3rem;
+      font-size: 3.1rem;
       margin-bottom: 0.75rem;
+      letter-spacing: 0.5px;
+      text-shadow: 0 0 18px rgba(125, 211, 252, 0.12);
     }
 
     p {
-      color: #9aa4b2;
-      max-width: 640px;
-      margin: 0 auto;
-      line-height: 1.6;
+      color: var(--muted);
+      max-width: 720px;
+      margin: 0.2rem auto 0;
+      line-height: 1.65;
     }
 
     .button {
       display: inline-block;
       margin-top: 1.75rem;
-      color: #0b0f14;
-      background: #7dd3fc;
-      padding: 0.65rem 1.1rem;
-      border-radius: 10px;
+      color: #081018;
+      background: var(--accent);
+      padding: 0.7rem 1.15rem;
+      border-radius: 12px;
       text-decoration: none;
-      font-weight: 700;
-    }
-
-    /* 🚧 Construction banner */
-    .banner {
-      background: linear-gradient(90deg, #121824, #0f1520);
-      border-top: 1px solid #263041;
-      border-bottom: 1px solid #263041;
-      color: #e6e8eb;
-      text-align: center;
-      padding: 0.9rem 1rem;
-      font-size: 0.95rem;
-    }
-
-    .banner span {
-      color: #7dd3fc;
       font-weight: 800;
+      box-shadow: 0 10px 24px rgba(125, 211, 252, 0.18);
+      transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .button:hover{
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(125, 211, 252, 0.24);
+    }
+
+    /* 🚧 Under Construction banner — more profound */
+    .banner {
+      background:
+        linear-gradient(90deg, rgba(239,68,68,0.25), rgba(245,158,11,0.12), rgba(239,68,68,0.25)),
+        radial-gradient(800px 120px at 50% 0%, rgba(239,68,68,0.22), rgba(0,0,0,0));
+      border-top: 1px solid rgba(239,68,68,0.55);
+      border-bottom: 1px solid rgba(239,68,68,0.45);
+      color: #ffecec;
+      text-align: center;
+      padding: 0.95rem 1rem;
+      font-size: 0.95rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .banner strong{
+      color: #fff;
+      font-weight: 900;
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 16px rgba(239,68,68,0.35);
+    }
+
+    .banner::after{
+      content:"";
+      position:absolute;
+      inset:-40px -40px;
+      background: repeating-linear-gradient(
+        135deg,
+        rgba(255,255,255,0.06) 0px,
+        rgba(255,255,255,0.06) 10px,
+        rgba(0,0,0,0) 10px,
+        rgba(0,0,0,0) 22px
+      );
+      opacity: 0.35;
+      transform: rotate(0deg);
+      pointer-events:none;
     }
 
     main {
@@ -74,45 +120,60 @@
     #search {
       flex: 1;
       min-width: 240px;
-      background: #0f1520;
-      border: 1px solid #1e2633;
-      color: #e6e8eb;
-      padding: 0.75rem 0.9rem;
-      border-radius: 10px;
+      background: var(--panel2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.8rem 1rem;
+      border-radius: 12px;
       outline: none;
+      box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.04);
+      transition: border-color .12s ease, box-shadow .12s ease;
     }
 
-    #search::placeholder {
-      color: #6b7280;
+    #search::placeholder { color: #6b7280; }
+
+    #search:focus{
+      border-color: rgba(125, 211, 252, 0.55);
+      box-shadow:
+        0 0 0 3px rgba(125, 211, 252, 0.12),
+        inset 0 0 0 1px rgba(125, 211, 252, 0.10);
     }
 
     .filters {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.55rem;
       flex-wrap: wrap;
+      align-items: center;
     }
 
     .filter {
-      background: #0f1520;
-      border: 1px solid #1e2633;
+      background: var(--panel2);
+      border: 1px solid var(--border);
       color: #cbd5e1;
-      padding: 0.5rem 0.7rem;
+      padding: 0.55rem 0.8rem;
       border-radius: 999px;
       cursor: pointer;
-      font-weight: 600;
+      font-weight: 800;
       font-size: 0.85rem;
+      transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .filter:hover{
+      transform: translateY(-1px);
+      border-color: rgba(125, 211, 252, 0.35);
     }
 
     .filter.active {
-      background: #7dd3fc;
-      color: #0b0f14;
-      border-color: #7dd3fc;
+      background: var(--accent);
+      color: #081018;
+      border-color: var(--accent);
+      box-shadow: 0 10px 18px rgba(125, 211, 252, 0.12);
     }
 
     .statusLine {
-      color: #9aa4b2;
+      color: var(--muted);
       margin: 0.5rem 0 1.25rem;
-      font-size: 0.9rem;
+      font-size: 0.92rem;
     }
 
     .grid {
@@ -122,10 +183,33 @@
     }
 
     .card {
-      background: #121824;
-      border-radius: 12px;
-      padding: 1.5rem;
-      border: 1px solid #1e2633;
+      background: linear-gradient(180deg, rgba(18,24,36,0.95), rgba(12,16,26,0.98));
+      border-radius: 16px;
+      padding: 1.65rem;
+      border: 1px solid rgba(30,38,51,0.95);
+      box-shadow:
+        0 12px 30px rgba(0,0,0,0.32),
+        inset 0 0 0 1px rgba(125, 211, 252, 0.03);
+      transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: radial-gradient(500px 180px at 20% 0%, rgba(125,211,252,0.08), rgba(0,0,0,0));
+      pointer-events:none;
+      opacity: 0.9;
+    }
+
+    .card:hover{
+      transform: translateY(-2px);
+      border-color: rgba(125, 211, 252, 0.22);
+      box-shadow:
+        0 16px 40px rgba(0,0,0,0.42),
+        inset 0 0 0 1px rgba(125, 211, 252, 0.06);
     }
 
     .cardTop {
@@ -134,46 +218,100 @@
       justify-content: space-between;
       gap: 0.75rem;
       margin-bottom: 0.75rem;
+      position: relative;
+      z-index: 1;
     }
 
     .tag {
-      font-size: 0.75rem;
-      color: #7dd3fc;
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 0.2px;
     }
 
+    /* Status pill base */
     .status {
-      font-size: 0.7rem;
-      padding: 0.25rem 0.5rem;
+      font-size: 0.72rem;
+      padding: 0.28rem 0.55rem;
       border-radius: 999px;
-      border: 1px solid #1e2633;
+      border: 1px solid var(--border);
       color: #cbd5e1;
-      background: #0f1520;
+      background: rgba(15,21,32,0.75);
+      font-weight: 900;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* LIVE: green glow */
+    .status.live{
+      border-color: rgba(34,197,94,0.65);
+      color: #dcfce7;
+      background: rgba(34,197,94,0.10);
+      box-shadow:
+        0 0 0 3px rgba(34,197,94,0.10),
+        0 0 18px rgba(34,197,94,0.25);
+    }
+
+    /* WIP: amber pop */
+    .status.wip{
+      border-color: rgba(245,158,11,0.70);
+      color: #fff7ed;
+      background: rgba(245,158,11,0.10);
+      box-shadow:
+        0 0 0 3px rgba(245,158,11,0.10),
+        0 0 18px rgba(245,158,11,0.20);
+    }
+
+    /* Optional: PAUSED */
+    .status.paused{
+      border-color: rgba(168,85,247,0.70);
+      color: #f3e8ff;
+      background: rgba(168,85,247,0.10);
+      box-shadow:
+        0 0 0 3px rgba(168,85,247,0.10),
+        0 0 18px rgba(168,85,247,0.22);
+    }
+
+    /* Optional: DEAD/ARCHIVED */
+    .status.archived{
+      border-color: rgba(239,68,68,0.70);
+      color: #fee2e2;
+      background: rgba(239,68,68,0.10);
+      box-shadow:
+        0 0 0 3px rgba(239,68,68,0.10),
+        0 0 18px rgba(239,68,68,0.20);
     }
 
     .cardActions {
       display: flex;
       gap: 0.75rem;
       align-items: center;
+      position: relative;
+      z-index: 1;
     }
 
     .link {
-      color: #7dd3fc;
+      color: var(--accent);
       text-decoration: none;
-      font-weight: 700;
+      font-weight: 900;
     }
+    .link:hover{ text-decoration: underline; }
 
     .button.disabled {
       background: #2a3442;
       color: #9aa4b2;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     .empty {
-      color: #9aa4b2;
+      color: var(--muted);
       padding: 1.5rem;
-      border: 1px dashed #1e2633;
-      border-radius: 12px;
-      background: #0f1520;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: var(--panel2);
     }
 
     footer {
@@ -199,13 +337,12 @@
 </header>
 
 <div class="banner">
-  🚧 <span>Site Under Construction</span> 🥼 — New molecules are being engineered.  
-  Check back soon to watch the lab evolve 🧬🚀
+  🚧 <strong>Site Under Construction</strong> 🥼 — New molecules are being engineered. Check back soon to watch the lab evolve 🧬🚀
 </div>
 
 <main>
   <div class="controls">
-    <input id="search" type="search" placeholder="Search molecules…" autocomplete="off" />
+    <input id="search" type="search" placeholder="Search molecules… 🔎" autocomplete="off" />
     <div id="filters" class="filters"></div>
   </div>
 
