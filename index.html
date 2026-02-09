@@ -62,6 +62,89 @@
       color: #6b7280;
       font-size: 0.85rem;
     }
+     .controls{
+  display:flex;
+  gap:1rem;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:1rem;
+  flex-wrap:wrap;
+}
+#search{
+  flex:1;
+  min-width:240px;
+  background:#0f1520;
+  border:1px solid #1e2633;
+  color:#e6e8eb;
+  padding:0.75rem 0.9rem;
+  border-radius:10px;
+  outline:none;
+}
+#search::placeholder{ color:#6b7280; }
+
+.filters{
+  display:flex;
+  gap:0.5rem;
+  flex-wrap:wrap;
+}
+.filter{
+  background:#0f1520;
+  border:1px solid #1e2633;
+  color:#cbd5e1;
+  padding:0.5rem 0.7rem;
+  border-radius:999px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:0.85rem;
+}
+.filter.active{
+  background:#7dd3fc;
+  color:#0b0f14;
+  border-color:#7dd3fc;
+}
+.statusLine{
+  color:#9aa4b2;
+  margin:0.5rem 0 1.25rem;
+  font-size:0.9rem;
+}
+.cardTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:0.75rem;
+  margin-bottom:0.75rem;
+}
+.status{
+  font-size:0.7rem;
+  padding:0.25rem 0.5rem;
+  border-radius:999px;
+  border:1px solid #1e2633;
+  color:#cbd5e1;
+  background:#0f1520;
+}
+.button.disabled{
+  background:#2a3442;
+  color:#9aa4b2;
+  cursor:not-allowed;
+}
+.cardActions{
+  display:flex;
+  gap:0.75rem;
+  align-items:center;
+}
+.link{
+  color:#7dd3fc;
+  text-decoration:none;
+  font-weight:700;
+}
+.empty{
+  color:#9aa4b2;
+  padding:1.5rem;
+  border:1px dashed #1e2633;
+  border-radius:12px;
+  background:#0f1520;
+}
+
   </style>
 </head>
 <body>
@@ -75,24 +158,18 @@
 </header>
 
 <main>
-  <section class="grid">
+  <div class="controls">
+    <input id="search" type="search" placeholder="Search molecules…" autocomplete="off" />
+    <div id="filters" class="filters"></div>
+  </div>
 
-    <div class="card">
-      <span class="tag">Utilities</span>
-      <h3>Example Molecule</h3>
-      <p>Short description of what this app does.</p>
-      <a class="button" href="#" target="_blank">Launch</a>
-    </div>
+  <div id="statusLine" class="statusLine">Loading…</div>
 
-    <div class="card">
-      <span class="tag">Fitness</span>
-      <h3>Another Molecule</h3>
-      <p>Another small experiment or tool.</p>
-      <a class="button" href="#" target="_blank">Launch</a>
-    </div>
-
-  </section>
+  <section id="moleculeGrid" class="grid"></section>
 </main>
+
+<script src="labs.js"></script>
+
 
 <footer>
   © ElevAI Labs • Built in public
