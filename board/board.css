@@ -1,0 +1,38 @@
+:root{
+  --bg:#0b0f14;--panel:#121824;--panel2:#0f1520;--border:#1e2633;
+  --text:#e6e8eb;--muted:#9aa4b2;--accent:#7dd3fc;
+  --shadow:0 20px 80px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;
+  background:radial-gradient(900px 500px at 50% -10%, rgba(125,211,252,.10), transparent 60%),var(--bg);
+  color:var(--text);
+}
+a{color:var(--accent);text-decoration:none;font-weight:800}
+.hero{padding:2.5rem 1.25rem 1.5rem;border-bottom:1px solid rgba(30,38,51,.6)}
+.heroInner{max-width:1100px;margin:0 auto}
+.back{display:inline-block;max-width:1100px;margin:0 auto 1.25rem;color:var(--muted);font-weight:800}
+.badge{display:inline-flex;padding:.35rem .6rem;border:1px solid var(--border);background:rgba(15,21,32,.65);border-radius:999px;color:var(--muted);font-weight:800;font-size:.8rem}
+h1{margin:.75rem 0 .5rem;font-size:clamp(2rem,3.8vw,3rem);letter-spacing:-.02em}
+.sub{margin:0;color:var(--muted);max-width:820px;line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:1.5rem 1.25rem 3rem}
+.counts{display:flex;gap:.6rem;flex-wrap:wrap;margin-top:1rem}
+.chip{padding:.35rem .6rem;border-radius:999px;border:1px solid var(--border);background:rgba(15,21,32,.6);color:var(--muted);font-weight:900;font-size:.82rem}
+.chip strong{color:var(--text)}
+.toolbar{display:flex;gap:.8rem;flex-wrap:wrap;margin:1rem 0}
+input,select{
+  padding:.8rem .9rem;border-radius:12px;border:1px solid var(--border);
+  background:var(--panel2);color:var(--text);outline:none
+}
+input{flex:1;min-width:240px}
+.list{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:1rem}
+.card{background:linear-gradient(180deg, rgba(18,24,36,.85), rgba(18,24,36,.65));border:1px solid var(--border);border-radius:16px;padding:1.1rem;box-shadow:var(--shadow)}
+.top{display:flex;justify-content:space-between;gap:.6rem;align-items:center;margin-bottom:.75rem}
+.tag{color:var(--accent);font-weight:900;font-size:.8rem}
+.status{padding:.25rem .5rem;border-radius:999px;border:1px solid var(--border);background:rgba(15,21,32,.6);color:var(--muted);font-weight:900;font-size:.72rem}
+h3{margin:.2rem 0 .5rem}
+p{margin:0;color:var(--muted);line-height:1.4}
+.muted{color:var(--muted)}
+.footnote{margin-top:1.25rem;font-size:.9rem}
+.empty{padding:1.25rem;border-radius:14px;border:1px dashed var(--border);background:rgba(15,21,32,.6);color:var(--muted)}
