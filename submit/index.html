@@ -4,96 +4,163 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Submit an App Idea • ElevAI Labs</title>
-  <style>
-    body{margin:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,sans-serif;background:#0b0f14;color:#e6e8eb}
-    header,main{max-width:900px;margin:0 auto;padding:1.5rem}
-    header{padding-top:2.5rem}
-    h1{margin:0 0 .5rem;font-size:2.2rem}
-    p{margin:.25rem 0 0;color:#9aa4b2}
-    .card{background:#121824;border:1px solid #1e2633;border-radius:14px;padding:1.25rem;margin-top:1rem}
-    label{display:block;font-weight:800;margin:.75rem 0 .35rem}
-    input,textarea,select{
-      width:100%;padding:.75rem .9rem;border-radius:10px;border:1px solid #1e2633;
-      background:#0f1520;color:#e6e8eb
-    }
-    textarea{min-height:120px}
-    .btn{
-      margin-top:1rem;padding:.8rem 1rem;border-radius:10px;
-      background:#7dd3fc;color:#0b0f14;font-weight:900;border:none;cursor:pointer
-    }
-    .note{color:#9aa4b2;font-size:.9rem;margin-top:.5rem}
-    .result{margin-top:1rem;padding:1rem;border-radius:12px;background:#0f1520;border:1px dashed #1e2633}
-  </style>
+  <link rel="stylesheet" href="./submit.css" />
 </head>
 <body>
-  <header>
-    <h1>Submit an App Idea</h1>
-    <p>Request an app. I might build it. ⌨️ Probably will ↓ 👇</p>
+  <header class="hero">
+    <a class="back" href="../" aria-label="Back to ElevAI Labs">← Back to Labs</a>
+
+    <div class="heroInner">
+      <div class="badge">ElevAI Labs • Intake</div>
+      <h1>Submit an App Idea</h1>
+      <p class="sub">
+        Got an idea that would save time,make money,reduce chaos,or just be beautifully unhinged?
+        Drop it here. I’ll review it and (maybe) build it into a molecule. 🧬
+      </p>
+
+      <div class="heroStats" aria-label="How this works">
+        <div class="stat">
+          <div class="statTop">1</div>
+          <div class="statText">You submit the idea</div>
+        </div>
+        <div class="stat">
+          <div class="statTop">2</div>
+          <div class="statText">It becomes a tracked ticket</div>
+        </div>
+        <div class="stat">
+          <div class="statTop">3</div>
+          <div class="statText">You can follow progress</div>
+        </div>
+      </div>
+    </div>
   </header>
 
-  <main>
-    <div class="card">
-      <form id="ideaForm">
-        <label>Idea name</label>
-        <input name="title" required placeholder="e.g. Tip Splitter for Servers" />
+  <main class="wrap">
+    <section class="card">
+      <div class="cardHead">
+        <h2>Idea details</h2>
+        <p class="muted">No account needed. Just the essentials. Keep it human.</p>
+      </div>
 
-        <label>Category</label>
-        <select name="category">
-          <option>Utilities</option>
-          <option>Fitness</option>
-          <option>Creators</option>
-          <option>Music Tools</option>
-          <option>AI Tools</option>
-          <option>Mindset</option>
-          <option>Other</option>
-        </select>
+      <form id="intakeForm" novalidate>
+        <!-- Honeypot: humans won't fill this -->
+        <div class="hp" aria-hidden="true">
+          <label for="company">Company</label>
+          <input id="company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
 
-        <label>What problem does it solve?</label>
-        <textarea name="problem" required></textarea>
+        <div class="grid2">
+          <div class="field">
+            <label for="title">Idea name <span class="req">*</span></label>
+            <input id="title" name="title" placeholder="e.g., Tip Splitter for Servers" required maxlength="80" />
+            <div class="hint">Short title. Like a song hook. 🎣</div>
+          </div>
 
-        <label>Must-have features</label>
-        <textarea name="features"></textarea>
+          <div class="field">
+            <label for="category">Category <span class="req">*</span></label>
+            <select id="category" name="category" required>
+              <option value="" selected disabled>Select one</option>
+              <option>Utilities</option>
+              <option>Fitness</option>
+              <option>Creators</option>
+              <option>Music Tools</option>
+              <option>AI Tools</option>
+              <option>Mindset</option>
+              <option>Other</option>
+            </select>
+            <div class="hint">This helps it land in the right drawer.</div>
+          </div>
+        </div>
 
-        <label>Your email (required)</label>
-        <input type="email" name="contact" required placeholder="you@example.com" />
+        <div class="field">
+          <label for="problem">What problem does it solve? <span class="req">*</span></label>
+          <textarea id="problem" name="problem" required maxlength="1200"
+            placeholder="What’s annoying/slow/confusing today? What would success look like?"></textarea>
+          <div class="hint">One paragraph is enough. Two if you’re spicy.</div>
+        </div>
 
-        <button class="btn" type="submit">Submit Idea</button>
-        <div class="note">Email is required for verification and follow-up.</div>
+        <div class="field">
+          <label for="features">Must-have features</label>
+          <textarea id="features" name="features" maxlength="1200"
+            placeholder="List the essentials. Bullets welcome. (What MUST it do?)"></textarea>
+        </div>
+
+        <div class="grid2">
+          <div class="field">
+            <label for="audience">Who is this for?</label>
+            <input id="audience" name="audience" maxlength="120" placeholder="e.g., restaurant staff,students,gym rats" />
+          </div>
+
+          <div class="field">
+            <label for="contact">Optional contact</label>
+            <input id="contact" name="contact" maxlength="120" placeholder="Email or @handle (optional)" />
+          </div>
+        </div>
+
+        <div class="agreement">
+          <input id="ok" type="checkbox" required />
+          <label for="ok">
+            I understand this is a request,not a promise. If it’s a good fit,it may get built.
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="submitBtn" class="btn" type="submit">
+            <span class="btnIcon">🧪</span>
+            <span>Submit idea</span>
+          </button>
+          <div class="fine">
+            By submitting,you allow the idea to be reviewed and potentially implemented in ElevAI Labs.
+          </div>
+        </div>
+
+        <div id="statusBox" class="statusBox" role="status" aria-live="polite"></div>
       </form>
+    </section>
 
-      <div id="result" class="result" style="display:none;"></div>
-    </div>
+    <section class="side">
+      <div class="panel">
+        <h3>What happens after you submit</h3>
+
+        <div class="meter">
+          <div class="meterRow">
+            <span class="pill active">Submitted</span>
+            <span class="pill">Reviewing</span>
+            <span class="pill">Accepted</span>
+            <span class="pill">Building</span>
+            <span class="pill">Shipped</span>
+          </div>
+          <div class="meterHint muted">
+            Your idea enters the queue as a tracked ticket. Status updates happen as it moves.
+          </div>
+        </div>
+
+        <div class="faq">
+          <details>
+            <summary>Will you build every idea?</summary>
+            <p class="muted">Nope. Some ideas get declined,merged,or postponed. The lab stays curated.</p>
+          </details>
+          <details>
+            <summary>How do I track it?</summary>
+            <p class="muted">After submission,you’ll get a “Tracking link” if enabled. Otherwise,check the public intake board.</p>
+          </details>
+          <details>
+            <summary>Can I submit more than one?</summary>
+            <p class="muted">Yes. Just don’t machine-gun spam. I’m one human and a keyboard. 😄</p>
+          </details>
+        </div>
+
+        <a class="boardLink" id="boardLink" href="#" target="_blank" rel="noopener">
+          View the public idea board →
+        </a>
+      </div>
+    </section>
   </main>
 
-  <script>
-    const WEBHOOK_URL =
-      "https://YOUR-N8N-DOMAIN/webhook/idea-intake?key=YOUR_SECRET";
+  <footer class="footer">
+    © ElevAI Labs • Built in public (but not built by the public 😈)
+  </footer>
 
-    const form = document.getElementById("ideaForm");
-    const result = document.getElementById("result");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      result.style.display = "none";
-
-      const data = Object.fromEntries(new FormData(form).entries());
-
-      try {
-        const res = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data)
-        });
-
-        const json = await res.json();
-        result.style.display = "block";
-        result.textContent = json.message || "Submitted!";
-        form.reset();
-      } catch {
-        result.style.display = "block";
-        result.textContent = "Submission failed. Try again.";
-      }
-    });
-  </script>
+  <script src="./submit.js"></script>
 </body>
 </html>
