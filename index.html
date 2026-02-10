@@ -10,14 +10,10 @@
 </head>
 
 <body>
-  <canvas id="bg"></canvas>
-<div class="overlay overlay-scan"></div>
-<div class="toast" aria-live="polite"></div>
-
   <!-- Ambient background canvas -->
   <canvas id="bg" aria-hidden="true"></canvas>
 
-  <!-- Soft grain/scanline overlays -->
+  <!-- Overlays -->
   <div class="overlay overlay-scan" aria-hidden="true"></div>
   <div class="overlay overlay-grain" aria-hidden="true"></div>
 
@@ -30,6 +26,11 @@
         <div class="spark s1"></div>
         <div class="spark s2"></div>
         <div class="spark s3"></div>
+
+        <!-- LOGO IN THE ORB -->
+        <div class="logo-orb" aria-hidden="true">
+          <img class="logo" src="./assets/labs-logo.png" alt="" />
+        </div>
       </div>
 
       <div class="brand">
@@ -71,7 +72,7 @@
       </div>
 
       <div class="meta">
-        <span id="countLabel" class="count">0 molecules loaded 🧬</span>
+        <span id="countLabel" class="count">Loading molecules… 🧬</span>
         <span class="dot"></span>
         <span id="hintLabel" class="hint">Tip: hover a card… it bites back 😈</span>
       </div>
@@ -87,9 +88,6 @@
       <span>© ElevAI Labs 🧠 · Built in Public 🛠</span>
       <span class="sep">·</span>
       <a href="https://elevaistrategies.com" class="footer-link">Home 🏠</a>
-      <!-- Optional socials in footer later -->
-      <!-- <span class="sep">·</span>
-      <a class="footer-link" href="...">Instagram</a> -->
     </div>
   </footer>
 
