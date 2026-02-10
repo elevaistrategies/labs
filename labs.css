@@ -128,14 +128,15 @@ button,input{font:inherit}
 
 /* ===== Liquid logo orb ===== */
 .logo-orb{
-  position:relative;
+  position:absolute;     /* LOCK TO REACTOR */
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+
   width:168px;
   height:168px;
   border-radius:999px;
   overflow:hidden;
-@media (max-width:740px){
-  .logo-orb{ width:140px; height:140px; }
-}
 
   border:1px solid rgba(255,255,255,.18);
   background:radial-gradient(circle at 30% 30%, rgba(255,255,255,.14), rgba(255,255,255,.03));
@@ -144,7 +145,16 @@ button,input{font:inherit}
     0 0 24px rgba(106,215,255,.14),
     0 0 22px rgba(255,91,214,.10),
     0 0 18px rgba(251,191,36,.10);
+
+  z-index:3; /* ABOVE RINGS */
 }
+@media (max-width:740px){
+  .logo-orb{
+    width:140px;
+    height:140px;
+  }
+}
+
 
 /* Liquid layer (moving gradient blob) */
 .logo-orb::before{
@@ -501,9 +511,12 @@ h1{
 
 /* Reactor orbit thing (behind logo/text) */
 .reactor{
-  position:absolute;
-  inset:-80px -80px auto -80px;
-  height:320px;
+  position:relative;      /* KEY FIX */
+  height:360px;
+  width:100%;
+  max-width:520px;
+  margin:0 auto 10px;
+
   z-index:1;
   pointer-events:none;
   opacity:.88;
