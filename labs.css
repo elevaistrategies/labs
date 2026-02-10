@@ -199,7 +199,7 @@ button,input{font:inherit}
   border-radius:999px;     /* force circle */
   object-fit:cover;        /* fills circle even if square */
   object-position:center;
-  padding:14px;            /* gives it a “badge” feel */
+  padding:10px;            /* gives it a “badge” feel */
   background:rgba(0,0,0,.20); /* subtle contrast behind */
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
