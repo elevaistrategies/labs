@@ -1,16 +1,7 @@
-// ElevAI Labs — molecules renderer (no frameworks, no build step)
-// Enhanced: status classes + emoji labels + highlight search + deep links + copy link + URL params + polished UX
-
-function slugify(str) {
-  return String(str)
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
+// ElevAI Labs — JSON-powered molecules renderer (no frameworks)
 
 function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (m) => ({
+  return String(str ?? "").replace(/[&<>"']/g, (m) => ({
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
@@ -19,268 +10,266 @@ function escapeHtml(str) {
   }[m]));
 }
 
-function normStatus(status) {
-  const s = String(status || "").trim().toLowerCase();
-  if (!s) return { key: "live", label: "LIVE", emoji: "✅" };
-
-  if (["live", "launched", "shipped", "public"].includes(s))
-    return { key: "live", label: "LIVE", emoji: "✅" };
-
-  if (["wip", "work in progress", "in progress", "building"].includes(s))
-    return { key: "wip", label: "WIP", emoji: "🛠️" };
-
-  if (["beta", "testing", "test"].includes(s))
-    return { key: "beta", label: "BETA", emoji: "🧪" };
-
-  if (["paused", "on hold", "hold"].includes(s))
-    return { key: "paused", label: "PAUSED", emoji: "⏸️" };
-
-  if (["archived", "dead", "retired"].includes(s))
-    return { key: "archived", label: "ARCHIVED", emoji: "🧊" };
-
-  return { key: s.replace(/\s+/g, "-"), label: s.toUpperCase(), emoji: "⚙️" };
+function toast(msg) {
+  let t = document.querySelector(".toast");
+  if (!t) {
+    t = document.createElement("div");
+    t.className = "toast";
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.classList.add("show");
+  clearTimeout(toast._timer);
+  toast._timer = setTimeout(() => t.classList.remove("show"), 1100);
 }
 
 function badge(status) {
-  const s = normStatus(status);
-  return `<span class="status ${escapeHtml(s.key)}" data-status="${escapeHtml(s.key)}">${escapeHtml(s.emoji)} ${escapeHtml(s.label)}</span>`;
+  const s = String(status || "").toLowerCase().trim() || "live";
+  return `<span class="status" data-status="${escapeHtml(s)}">${escapeHtml(s.toUpperCase())}</span>`;
 }
 
-function getCategories(molecules) {
-  const set = new Set(molecules.map(m => m.category).filter(Boolean));
-  return ["All", ...Array.from(set).sort((a, b) => a.localeCompare(b))];
+function canLaunch(m) {
+  const live = String(m.status || "").toLowerCase().trim() === "live";
+  const url = String(m.url || "").trim();
+  return live && url && url !== "#";
 }
 
-function renderFilters(categories) {
-  const wrap = document.querySelector("#filters");
-  wrap.innerHTML = categories.map((c, i) => {
-    const active = i === 0 ? "active" : "";
-    return `<button class="filter ${active}" data-cat="${escapeHtml(c)}">${escapeHtml(c)}</button>`;
+function getCategories(items) {
+  const set = new Set(items.map(m => m.category).filter(Boolean));
+  return ["All", ...Array.from(set).sort((a,b)=>a.localeCompare(b))];
+}
+
+// DOM
+const grid = document.getElementById("grid");
+const searchInput = document.getElementById("searchInput");
+const clearSearch = document.getElementById("clearSearch");
+const chipRow = document.getElementById("chipRow");
+const countLabel = document.getElementById("countLabel");
+const randomBtn = document.getElementById("randomMolecule");
+
+// State
+const state = { q:"", category:"All", molecules:[] };
+
+function renderChips() {
+  const cats = getCategories(state.molecules);
+  chipRow.innerHTML = cats.map(c => {
+    const active = c === state.category ? "active" : "";
+    return `<button class="chip ${active}" data-cat="${escapeHtml(c)}" type="button">${escapeHtml(c)}</button>`;
   }).join("");
-}
 
-function highlight(text, query) {
-  const t = String(text || "");
-  const q = String(query || "").trim();
-  if (!q) return escapeHtml(t);
-
-  const safe = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp(safe, "ig");
-
-  return escapeHtml(t).replace(re, (m) => `<mark style="
-    background: rgba(125,211,252,0.20);
-    color: inherit;
-    padding: 0.05rem 0.15rem;
-    border-radius: 6px;
-    border: 1px solid rgba(125,211,252,0.25);
-  ">${escapeHtml(m)}</mark>`);
-}
-
-function copyToClipboard(text) {
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    return navigator.clipboard.writeText(text);
-  }
-  return new Promise((resolve, reject) => {
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      const ok = document.execCommand("copy");
-      document.body.removeChild(ta);
-      ok ? resolve() : reject(new Error("Copy failed"));
-    } catch (e) { reject(e); }
+  chipRow.querySelectorAll(".chip").forEach(btn => {
+    btn.addEventListener("click", () => {
+      state.category = btn.dataset.cat;
+      renderChips();
+      renderGrid();
+    });
   });
 }
 
-function pulseElement(el) {
-  if (!el) return;
-  el.animate(
-    [
-      { transform: "translateY(0)", boxShadow: "0 0 0 rgba(0,0,0,0)" },
-      { transform: "translateY(-2px)", boxShadow: "0 18px 44px rgba(0,0,0,0.40)" },
-      { transform: "translateY(0)", boxShadow: "0 0 0 rgba(0,0,0,0)" }
-    ],
-    { duration: 520, easing: "ease-out" }
-  );
-}
+function cardHTML(m) {
+  const title = m.name || "Untitled Molecule";
+  const cat = m.category || "Unsorted";
+  const desc = m.description || "";
+  const url = String(m.url || "").trim();
 
-function renderCards(molecules, category, query) {
-  const grid = document.querySelector("#moleculeGrid");
-  const q = (query || "").toLowerCase().trim();
-
-  const filtered = molecules.filter(m => {
-    const catOk = category === "All" || m.category === category;
-    const text = `${m.name || ""} ${m.description || ""} ${m.category || ""}`.toLowerCase();
-    const qOk = !q || text.includes(q);
-    return catOk && qOk;
-  });
-
-  if (!filtered.length) {
-    grid.innerHTML = `<div class="empty">No molecules match that filter. Try a different category or search. 🧬</div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(m => {
-    const id = escapeHtml(m.id || slugify(m.name || ""));
-    const nameRaw = m.name || "Untitled Molecule";
-    const descRaw = m.description || "";
-    const catRaw = m.category || "Unsorted";
-
-    const name = highlight(nameRaw, query);
-    const desc = highlight(descRaw, query);
-    const cat = escapeHtml(catRaw);
-
-    const url = m.url && m.url !== "#" ? m.url : "";
-    const launch = url
-      ? `<a class="button" href="${escapeHtml(url)}" target="_blank" rel="noopener">Launch 🚀</a>`
-      : `<span class="button disabled" title="URL not set yet">Launch ⏳</span>`;
-
-    const repoLink = m.repo
-      ? `<a class="link" href="${escapeHtml(m.repo)}" target="_blank" rel="noopener">GitHub 🧾</a>`
-      : "";
-
-    const ideaLink = m.idea
-      ? `<a class="link" href="${escapeHtml(m.idea)}" target="_blank" rel="noopener">Idea 🧠</a>`
-      : "";
-
-    const copyBtn = `<a class="link" href="#${id}" data-copylink="${id}" title="Copy link">Copy 🔗</a>`;
-
-    return `
-      <div class="card" id="${id}">
-        <div class="cardTop">
-          <span class="tag">${cat}</span>
-          ${badge(m.status)}
-        </div>
-        <h3>${name}</h3>
-        <p>${desc}</p>
-        <div class="cardActions">
-          ${launch}
-          ${repoLink}
-          ${ideaLink}
-          ${copyBtn}
-        </div>
+  return `
+  <article class="card" data-title="${escapeHtml(title)}" data-cat="${escapeHtml(cat)}">
+    <div class="card-inner">
+      <div class="kicker">
+        <div class="cat">${escapeHtml(cat)}</div>
+        ${badge(m.status)}
       </div>
-    `;
-  }).join("");
+
+      <h3 class="title">${escapeHtml(title)}</h3>
+      <p class="desc">${escapeHtml(desc)}</p>
+
+      <div class="actions">
+        ${
+          canLaunch(m)
+            ? `<a class="action link" href="${escapeHtml(url)}" target="_blank" rel="noopener">Launch 🚀</a>`
+            : `<button class="action disabled" type="button" disabled>Launch ⏳</button>`
+        }
+        <button class="action" type="button" data-copy="${escapeHtml(url)}">Copy 🔗</button>
+      </div>
+    </div>
+  </article>
+  `;
 }
 
-function getQueryParams() {
-  const sp = new URLSearchParams(window.location.search);
-  return {
-    cat: sp.get("cat") || "",
-    q: sp.get("q") || ""
-  };
+function filtered() {
+  const q = state.q.trim().toLowerCase();
+  return state.molecules.filter(m => {
+    const inCat = state.category === "All" || (m.category || "") === state.category;
+    const text = `${m.name || ""} ${m.description || ""} ${m.category || ""}`.toLowerCase();
+    const inSearch = !q || text.includes(q);
+    return inCat && inSearch;
+  });
 }
 
-function setQueryParams({ cat, q }) {
-  const url = new URL(window.location.href);
-  if (cat && cat !== "All") url.searchParams.set("cat", cat);
-  else url.searchParams.delete("cat");
+function enableCardTilt() {
+  grid.querySelectorAll(".card").forEach(card => {
+    let raf = null;
+    function onMove(e) {
+      const r = card.getBoundingClientRect();
+      const mx = ((e.clientX - r.left) / r.width) * 100;
+      const my = ((e.clientY - r.top) / r.height) * 100;
+      card.style.setProperty("--mx", `${mx}%`);
+      card.style.setProperty("--my", `${my}%`);
 
-  if (q && q.trim()) url.searchParams.set("q", q.trim());
-  else url.searchParams.delete("q");
+      const dx = (e.clientX - (r.left + r.width / 2)) / r.width;
+      const dy = (e.clientY - (r.top + r.height / 2)) / r.height;
 
-  history.replaceState(null, "", url.toString());
+      const rx = (-dy * 8).toFixed(2);
+      const ry = (dx * 10).toFixed(2);
+
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        card.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) translateY(-2px)`;
+      });
+    }
+    function onLeave() {
+      if (raf) cancelAnimationFrame(raf);
+      card.style.transform = "";
+      card.style.removeProperty("--mx");
+      card.style.removeProperty("--my");
+    }
+    card.addEventListener("mousemove", onMove);
+    card.addEventListener("mouseleave", onLeave);
+  });
 }
 
-function scrollToHashAndPulse() {
-  const hash = (window.location.hash || "").slice(1);
-  if (!hash) return;
-  const el = document.getElementById(hash);
-  if (!el) return;
+function renderGrid() {
+  const items = filtered();
+  grid.innerHTML = items.map(cardHTML).join("");
+  countLabel.textContent = `${items.length} molecule${items.length === 1 ? "" : "s"} loaded 🧬`;
 
-  el.scrollIntoView({ behavior: "smooth", block: "center" });
-  setTimeout(() => pulseElement(el), 240);
+  grid.querySelectorAll("[data-copy]").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const val = btn.getAttribute("data-copy") || "";
+      if (!val || val === "#") return toast("No link set for this molecule yet 🧪");
+      try { await navigator.clipboard.writeText(val); toast("Copied ✅"); }
+      catch { toast("Copy failed 🧟"); }
+    });
+  });
+
+  enableCardTilt();
 }
 
-async function init() {
-  const statusEl = document.querySelector("#statusLine");
-  const search = document.querySelector("#search");
-  const filters = document.querySelector("#filters");
+// Search
+searchInput.addEventListener("input", (e) => { state.q = e.target.value || ""; renderGrid(); });
+clearSearch.addEventListener("click", () => { searchInput.value=""; state.q=""; searchInput.focus(); renderGrid(); });
 
+// Random
+randomBtn.addEventListener("click", () => {
+  const items = filtered().filter(canLaunch);
+  if (!items.length) return toast("No launchable molecules in this filter 🧬");
+  const pick = items[Math.floor(Math.random() * items.length)];
+  toast(`Warping to: ${pick.name} 🌀`);
+  setTimeout(() => window.open(pick.url, "_blank", "noopener"), 380);
+});
+
+// ===== Ambient background canvas (seam-free) =====
+(function bg() {
+  const c = document.getElementById("bg");
+  const ctx = c.getContext("2d");
+  let w = 0, h = 0, dpr = 1;
+
+  const particles = [];
+  const N = 95;
+
+  function viewportSize() {
+    const vv = window.visualViewport;
+    const width = vv?.width ?? window.innerWidth;
+    const height = vv?.height ?? window.innerHeight;
+    return { width, height };
+  }
+
+  function resize() {
+    dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+    const { width, height } = viewportSize();
+
+    w = c.width = Math.floor(width * dpr);
+    h = c.height = Math.floor(height * dpr);
+
+    c.style.width = width + "px";
+    c.style.height = height + "px";
+  }
+
+  function rnd(a,b){return a + Math.random()*(b-a);}
+
+  function init() {
+    particles.length = 0;
+    for (let i=0;i<N;i++){
+      particles.push({
+        x: rnd(0,w),
+        y: rnd(0,h),
+        r: rnd(1.0, 3.2) * dpr,
+        vx: rnd(-.16,.16) * dpr,
+        vy: rnd(-.10,.10) * dpr,
+        a: rnd(.07,.28),
+        hue: rnd(170, 340)
+      });
+    }
+  }
+
+  let t = 0;
+  function tick() {
+    t += 0.006;
+    ctx.clearRect(0,0,w,h);
+
+    // colorful fog
+    const gx = (Math.sin(t*0.9)*0.18 + 0.5) * w;
+    const gy = (Math.cos(t*0.7)*0.18 + 0.5) * h;
+    const g = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w,h)*0.7);
+    g.addColorStop(0, "rgba(106,215,255,0.10)");
+    g.addColorStop(0.32, "rgba(255,91,214,0.06)");
+    g.addColorStop(0.60, "rgba(251,191,36,0.05)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0,0,w,h);
+
+    for (const p of particles) {
+      p.x += p.vx;
+      p.y += p.vy;
+
+      if (p.x < -30) p.x = w + 30;
+      if (p.x > w + 30) p.x = -30;
+      if (p.y < -30) p.y = h + 30;
+      if (p.y > h + 30) p.y = -30;
+
+      ctx.beginPath();
+      ctx.fillStyle = `hsla(${p.hue}, 92%, 82%, ${p.a})`;
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  const vv = window.visualViewport;
+  window.addEventListener("resize", () => { resize(); init(); });
+  vv?.addEventListener("resize", () => { resize(); init(); });
+  vv?.addEventListener("scroll", () => { resize(); }); // keeps seam away on address-bar changes
+
+  resize();
+  init();
+  tick();
+})();
+
+// Load molecules
+async function loadMolecules() {
   try {
-    statusEl.textContent = "Loading molecules… 🔬";
-    const res = await fetch("molecules.json", { cache: "no-store" });
-    if (!res.ok) throw new Error(`Could not load molecules.json (${res.status})`);
-    const molecules = await res.json();
-
-    const categories = getCategories(molecules);
-    renderFilters(categories);
-
-    const qp = getQueryParams();
-    let currentCategory = qp.cat && categories.includes(qp.cat) ? qp.cat : "All";
-    let currentQuery = qp.q || "";
-
-    search.value = currentQuery;
-
-    document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-    const btn = Array.from(document.querySelectorAll("button[data-cat]"))
-      .find(b => (b.getAttribute("data-cat") || "") === currentCategory);
-    if (btn) btn.classList.add("active");
-    else document.querySelector(".filter")?.classList.add("active");
-
-    renderCards(molecules, currentCategory, currentQuery);
-    statusEl.textContent = `${molecules.length} molecule${molecules.length === 1 ? "" : "s"} loaded. 🧬`;
-
-    scrollToHashAndPulse();
-
-    filters.addEventListener("click", (e) => {
-      const btn = e.target.closest("button[data-cat]");
-      if (!btn) return;
-
-      currentCategory = btn.getAttribute("data-cat") || "All";
-
-      document.querySelectorAll(".filter").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-
-      renderCards(molecules, currentCategory, currentQuery);
-      setQueryParams({ cat: currentCategory, q: currentQuery });
-
-      const firstCard = document.querySelector(".card");
-      pulseElement(firstCard);
-    });
-
-    let searchTimer = null;
-    search.addEventListener("input", (e) => {
-      currentQuery = e.target.value || "";
-      clearTimeout(searchTimer);
-      searchTimer = setTimeout(() => {
-        renderCards(molecules, currentCategory, currentQuery);
-        setQueryParams({ cat: currentCategory, q: currentQuery });
-      }, 80);
-    });
-
-    document.querySelector("#moleculeGrid").addEventListener("click", async (e) => {
-      const a = e.target.closest("a[data-copylink]");
-      if (!a) return;
-
-      e.preventDefault();
-      const id = a.getAttribute("data-copylink");
-      const url = new URL(window.location.href);
-      url.hash = `#${id}`;
-
-      try {
-        await copyToClipboard(url.toString());
-        a.textContent = "Copied ✅";
-        setTimeout(() => (a.textContent = "Copy 🔗"), 900);
-      } catch {
-        a.textContent = "Copy failed ❌";
-        setTimeout(() => (a.textContent = "Copy 🔗"), 900);
-      }
-    });
-
-    window.addEventListener("hashchange", scrollToHashAndPulse);
-
+    countLabel.textContent = "Loading molecules… 🧬";
+    const res = await fetch("./molecules.json", { cache: "no-store" });
+    if (!res.ok) throw new Error(`molecules.json HTTP ${res.status}`);
+    const data = await res.json();
+    state.molecules = Array.isArray(data) ? data : [];
+    renderChips();
+    renderGrid();
   } catch (err) {
     console.error(err);
-    statusEl.textContent = "Failed to load molecules. Check molecules.json path/format. 💥";
-    const grid = document.querySelector("#moleculeGrid");
-    grid.innerHTML = `<div class="empty">Error: ${escapeHtml(err.message || err)}</div>`;
+    countLabel.textContent = "Failed to load molecules.json ⚠️";
+    toast("Couldn’t load molecules.json");
   }
 }
-
-document.addEventListener("DOMContentLoaded", init);
+loadMolecules();
