@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Idea Board • ElevAI Labs</title>
+  <link rel="stylesheet" href="./board.css" />
+</head>
+<body>
+  <header class="hero">
+    <a class="back" href="../">← Back to Labs</a>
+    <div class="heroInner">
+      <div class="badge">ElevAI Labs • Idea Board</div>
+      <h1>Idea Board</h1>
+      <p class="sub">Requests in the pipeline. Status updates happen as ideas move through the lab.</p>
+      <div class="counts" id="counts"></div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="toolbar">
+      <input id="search" type="search" placeholder="Search ideas…" />
+      <select id="status">
+        <option value="all">All statuses</option>
+        <option value="submitted">Submitted</option>
+        <option value="reviewing">Reviewing</option>
+        <option value="accepted">Accepted</option>
+        <option value="building">Building</option>
+        <option value="beta">Beta</option>
+        <option value="shipped">Shipped</option>
+        <option value="declined">Declined</option>
+      </select>
+    </div>
+
+    <section class="list" id="list"></section>
+    <div class="muted footnote" id="footnote"></div>
+  </main>
+
+  <script src="./board.js"></script>
+</body>
+</html>
