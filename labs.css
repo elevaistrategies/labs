@@ -670,8 +670,8 @@ h1{
 
 /* Place the logo perfectly centered INSIDE the reactor */
 .reactor-wrap .logo-orb{
-  width:128px;
-  height:128px;
+  width:168px;
+  height:168px;
   margin:0;               /* reactor-wrap handles spacing */
 }
 
