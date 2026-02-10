@@ -1,6 +1,6 @@
 // ====== CONFIG (edit these) ======
 const N8N_WEBHOOK_URL = "https://YOUR-N8N-DOMAIN/webhook/idea-intake?key=YOUR_LONG_SECRET";
-const INTAKE_BOARD_URL = "https://github.com/elevaistrategies/lab-intake/issues"; // public board
+const INTAKE_BOARD_URL = "../board/"; // public board
 // =================================
 
 const form = document.getElementById("intakeForm");
