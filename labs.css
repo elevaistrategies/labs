@@ -8,7 +8,6 @@
   --muted:rgba(233,238,252,.70);
   --muted2:rgba(233,238,252,.55);
 
-  /* Wider palette */
   --accent:#6ad7ff;
   --accent2:#a78bfa;
   --accent3:#ff5bd6;
@@ -26,7 +25,6 @@
   --glass:rgba(255,255,255,.06);
   --glass2:rgba(255,255,255,.04);
 
-  /* Footer gold */
   --gold:#f7d57a;
   --gold2:#d6a74b;
 }
@@ -37,7 +35,6 @@ body{
   margin:0;
   font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial;
 
-  /* colorful but controlled */
   background:
     radial-gradient(1100px 780px at 40% -20%, rgba(106,215,255,.14), transparent 60%),
     radial-gradient(900px 720px at 100% 0%, rgba(167,139,250,.13), transparent 55%),
@@ -98,7 +95,7 @@ button,input{font:inherit}
   border:1px solid var(--stroke);
   background: linear-gradient(180deg, rgba(18,24,40,.58), rgba(18,24,40,.30));
   border-radius:24px;
-  padding:30px 18px 22px; /* slightly more breathing room */
+  padding:30px 18px 22px;
   box-shadow:var(--shadow);
   overflow:hidden;
 }
@@ -116,7 +113,7 @@ button,input{font:inherit}
   z-index:0;
 }
 
-/* Stack: logo then text, centered */
+/* Text stack (below reactor) */
 .hero-stack{
   position:relative;
   z-index:2;
@@ -126,12 +123,70 @@ button,input{font:inherit}
   gap:14px;
 }
 
-/* ===== Liquid logo orb ===== */
+/* ===== Reactor (NOW a normal centered block) ===== */
+.reactor{
+  position:relative;         /* KEY FIX */
+  width:min(520px, 92vw);
+  height:360px;
+  margin:0 auto 10px;
+  z-index:1;
+  pointer-events:none;
+  opacity:.88;
+  filter:drop-shadow(0 18px 50px rgba(0,0,0,.45));
+}
+
+/* Rings */
+.ring{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:340px;
+  height:340px;
+  transform:translate(-50%,-50%);
+  border-radius:999px;
+  border:1px solid rgba(106,215,255,.18);
+  background:radial-gradient(circle at 30% 20%, rgba(106,215,255,.10), transparent 55%);
+  animation:spin 18s linear infinite;
+}
+.r2{
+  width:260px;height:260px;
+  border-color:rgba(167,139,250,.16);
+  animation-duration:14s;
+  animation-direction:reverse;
+}
+.r3{
+  width:190px;height:190px;
+  border-color:rgba(255,91,214,.12);
+  animation-duration:11s;
+}
+@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
+
+/* Sparks */
+.spark{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:10px;height:10px;border-radius:99px;
+  transform:translate(-50%,-50%);
+  background:rgba(255,255,255,.65);
+  box-shadow:0 0 26px rgba(106,215,255,.55);
+  animation:orbit 4.8s ease-in-out infinite;
+}
+.s2{animation-duration:6.4s;box-shadow:0 0 26px rgba(251,191,36,.40)}
+.s3{animation-duration:7.2s;box-shadow:0 0 26px rgba(255,91,214,.40)}
+@keyframes orbit{
+  0%{transform:translate(-50%,-50%) translateX(120px) translateY(-10px)}
+  50%{transform:translate(-50%,-50%) translateX(-120px) translateY(20px)}
+  100%{transform:translate(-50%,-50%) translateX(120px) translateY(-10px)}
+}
+
+/* ===== Liquid logo orb (LOCKED to reactor center) ===== */
 .logo-orb{
-  position:absolute;     /* LOCK TO REACTOR */
+  position:absolute;          /* KEY FIX */
   top:50%;
   left:50%;
   transform:translate(-50%, -50%);
+  z-index:3;
 
   width:168px;
   height:168px;
@@ -145,18 +200,9 @@ button,input{font:inherit}
     0 0 24px rgba(106,215,255,.14),
     0 0 22px rgba(255,91,214,.10),
     0 0 18px rgba(251,191,36,.10);
-
-  z-index:3; /* ABOVE RINGS */
-}
-@media (max-width:740px){
-  .logo-orb{
-    width:140px;
-    height:140px;
-  }
 }
 
-
-/* Liquid layer (moving gradient blob) */
+/* Liquid layer */
 .logo-orb::before{
   content:"";
   position:absolute;
@@ -177,7 +223,6 @@ button,input{font:inherit}
   mix-blend-mode:screen;
 }
 
-/* second “current” to feel like flowing liquid */
 .logo-orb::after{
   content:"";
   position:absolute;
@@ -192,35 +237,35 @@ button,input{font:inherit}
   animation:liquidFloat 5.6s ease-in-out infinite alternate;
 }
 
-@keyframes liquidSpin{
-  to{transform:rotate(360deg)}
-}
+@keyframes liquidSpin{to{transform:rotate(360deg)}}
 @keyframes liquidFloat{
   0%{transform:translate(-6%, -2%) scale(1.03)}
   100%{transform:translate(6%, 3%) scale(1.08)}
 }
 
-/* Force logo image into perfect circle */
+/* Force logo into circle */
 .logo{
   position:relative;
   z-index:2;
   width:100%;
   height:100%;
-  border-radius:999px;     /* force circle */
-  object-fit:cover;        /* fills circle even if square */
+  border-radius:999px;
+  object-fit:cover;
   object-position:center;
-  padding:10px;            /* gives it a “badge” feel */
-  background:rgba(0,0,0,.20); /* subtle contrast behind */
+  padding:10px;
+  background:rgba(0,0,0,.20);
   backdrop-filter:blur(2px);
   -webkit-backdrop-filter:blur(2px);
   filter:drop-shadow(0 10px 18px rgba(0,0,0,.35));
 }
 
-/* ===== Brand text ===== */
-.brand{
-  text-align:center;
-  max-width:720px;
+/* Mobile sizing for logo orb (VALID — outside blocks) */
+@media (max-width:740px){
+  .logo-orb{ width:140px; height:140px; }
 }
+
+/* ===== Brand text ===== */
+.brand{text-align:center;max-width:720px}
 
 h1{
   margin:0 0 10px;
@@ -508,53 +553,6 @@ h1{
 }
 .social:active{transform:translateY(1px)}
 .social svg{width:18px;height:18px;fill:currentColor;opacity:.95}
-
-/* Reactor orbit thing (behind logo/text) */
-.reactor{
-  position:relative;      /* KEY FIX */
-  height:360px;
-  width:100%;
-  max-width:520px;
-  margin:0 auto 10px;
-
-  z-index:1;
-  pointer-events:none;
-  opacity:.88;
-  filter:drop-shadow(0 18px 50px rgba(0,0,0,.45));
-}
-.ring{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:340px;
-  height:340px;
-  transform:translate(-50%,-50%);
-  border-radius:999px;
-  border:1px solid rgba(106,215,255,.18);
-  background:radial-gradient(circle at 30% 20%, rgba(106,215,255,.10), transparent 55%);
-  animation:spin 18s linear infinite;
-}
-.r2{width:260px;height:260px;border-color:rgba(167,139,250,.16);animation-duration:14s;animation-direction:reverse}
-.r3{width:190px;height:190px;border-color:rgba(255,91,214,.12);animation-duration:11s}
-@keyframes spin{to{transform:translate(-50%,-50%) rotate(360deg)}}
-
-.spark{
-  position:absolute;
-  top:50%;
-  left:50%;
-  width:10px;height:10px;border-radius:99px;
-  transform:translate(-50%,-50%);
-  background:rgba(255,255,255,.65);
-  box-shadow:0 0 26px rgba(106,215,255,.55);
-  animation:orbit 4.8s ease-in-out infinite;
-}
-.s2{animation-duration:6.4s;box-shadow:0 0 26px rgba(251,191,36,.40)}
-.s3{animation-duration:7.2s;box-shadow:0 0 26px rgba(255,91,214,.40)}
-@keyframes orbit{
-  0%{transform:translate(-50%,-50%) translateX(120px) translateY(-10px)}
-  50%{transform:translate(-50%,-50%) translateX(-120px) translateY(20px)}
-  100%{transform:translate(-50%,-50%) translateX(120px) translateY(-10px)}
-}
 
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.001ms !important;animation-iteration-count:1 !important;transition-duration:0.001ms !important;scroll-behavior:auto !important}
