@@ -1,378 +1,94 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>ElevAI Labs 🥼🧪</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    :root{
-      --bg:#0b0f14;
-      --panel:#121824;
-      --panel2:#0f1520;
-      --border:#1e2633;
-      --muted:#9aa4b2;
-      --text:#e6e8eb;
-      --accent:#7dd3fc;
-
-      /* Status colors */
-      --live:#22c55e;      /* green */
-      --wip:#f59e0b;       /* amber */
-      --paused:#a855f7;    /* purple */
-      --dead:#ef4444;      /* red */
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: radial-gradient(1200px 600px at 50% -200px, #162036 0%, var(--bg) 55%);
-      color: var(--text);
-    }
-
-    header {
-      padding: 4rem 2rem 2.5rem;
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 3.1rem;
-      margin-bottom: 0.75rem;
-      letter-spacing: 0.5px;
-      text-shadow: 0 0 18px rgba(125, 211, 252, 0.12);
-    }
-
-    p {
-      color: var(--muted);
-      max-width: 720px;
-      margin: 0.2rem auto 0;
-      line-height: 1.65;
-    }
-
-    .button {
-      display: inline-block;
-      margin-top: 1.75rem;
-      color: #081018;
-      background: var(--accent);
-      padding: 0.7rem 1.15rem;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 800;
-      box-shadow: 0 10px 24px rgba(125, 211, 252, 0.18);
-      transition: transform .12s ease, box-shadow .12s ease;
-    }
-    .button:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 14px 30px rgba(125, 211, 252, 0.24);
-    }
-
-    /* 🚧 Under Construction banner — more profound */
-    .banner {
-      background:
-        linear-gradient(90deg, rgba(239,68,68,0.25), rgba(245,158,11,0.12), rgba(239,68,68,0.25)),
-        radial-gradient(800px 120px at 50% 0%, rgba(239,68,68,0.22), rgba(0,0,0,0));
-      border-top: 1px solid rgba(239,68,68,0.55);
-      border-bottom: 1px solid rgba(239,68,68,0.45);
-      color: #ffecec;
-      text-align: center;
-      padding: 0.95rem 1rem;
-      font-size: 0.95rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .banner strong{
-      color: #fff;
-      font-weight: 900;
-      letter-spacing: 0.3px;
-      text-shadow: 0 0 16px rgba(239,68,68,0.35);
-    }
-
-    .banner::after{
-      content:"";
-      position:absolute;
-      inset:-40px -40px;
-      background: repeating-linear-gradient(
-        135deg,
-        rgba(255,255,255,0.06) 0px,
-        rgba(255,255,255,0.06) 10px,
-        rgba(0,0,0,0) 10px,
-        rgba(0,0,0,0) 22px
-      );
-      opacity: 0.35;
-      transform: rotate(0deg);
-      pointer-events:none;
-    }
-
-    main {
-      padding: 2rem;
-      max-width: 1100px;
-      margin: 0 auto;
-    }
-
-    .controls {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 1rem;
-      flex-wrap: wrap;
-    }
-
-    #search {
-      flex: 1;
-      min-width: 240px;
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 0.8rem 1rem;
-      border-radius: 12px;
-      outline: none;
-      box-shadow: inset 0 0 0 1px rgba(125, 211, 252, 0.04);
-      transition: border-color .12s ease, box-shadow .12s ease;
-    }
-
-    #search::placeholder { color: #6b7280; }
-
-    #search:focus{
-      border-color: rgba(125, 211, 252, 0.55);
-      box-shadow:
-        0 0 0 3px rgba(125, 211, 252, 0.12),
-        inset 0 0 0 1px rgba(125, 211, 252, 0.10);
-    }
-
-    .filters {
-      display: flex;
-      gap: 0.55rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .filter {
-      background: var(--panel2);
-      border: 1px solid var(--border);
-      color: #cbd5e1;
-      padding: 0.55rem 0.8rem;
-      border-radius: 999px;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 0.85rem;
-      transition: transform .12s ease, border-color .12s ease, background .12s ease;
-    }
-
-    .filter:hover{
-      transform: translateY(-1px);
-      border-color: rgba(125, 211, 252, 0.35);
-    }
-
-    .filter.active {
-      background: var(--accent);
-      color: #081018;
-      border-color: var(--accent);
-      box-shadow: 0 10px 18px rgba(125, 211, 252, 0.12);
-    }
-
-    .statusLine {
-      color: var(--muted);
-      margin: 0.5rem 0 1.25rem;
-      font-size: 0.92rem;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .card {
-      background: linear-gradient(180deg, rgba(18,24,36,0.95), rgba(12,16,26,0.98));
-      border-radius: 16px;
-      padding: 1.65rem;
-      border: 1px solid rgba(30,38,51,0.95);
-      box-shadow:
-        0 12px 30px rgba(0,0,0,0.32),
-        inset 0 0 0 1px rgba(125, 211, 252, 0.03);
-      transition: transform .14s ease, border-color .14s ease, box-shadow .14s ease;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .card::before{
-      content:"";
-      position:absolute;
-      inset:-2px;
-      background: radial-gradient(500px 180px at 20% 0%, rgba(125,211,252,0.08), rgba(0,0,0,0));
-      pointer-events:none;
-      opacity: 0.9;
-    }
-
-    .card:hover{
-      transform: translateY(-2px);
-      border-color: rgba(125, 211, 252, 0.22);
-      box-shadow:
-        0 16px 40px rgba(0,0,0,0.42),
-        inset 0 0 0 1px rgba(125, 211, 252, 0.06);
-    }
-
-    .cardTop {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .tag {
-      font-size: 0.78rem;
-      color: var(--accent);
-      font-weight: 800;
-      letter-spacing: 0.2px;
-    }
-
-    /* Status pill base */
-    .status {
-      font-size: 0.72rem;
-      padding: 0.28rem 0.55rem;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      color: #cbd5e1;
-      background: rgba(15,21,32,0.75);
-      font-weight: 900;
-      letter-spacing: 0.4px;
-      text-transform: uppercase;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* LIVE: green glow */
-    .status.live{
-      border-color: rgba(34,197,94,0.65);
-      color: #dcfce7;
-      background: rgba(34,197,94,0.10);
-      box-shadow:
-        0 0 0 3px rgba(34,197,94,0.10),
-        0 0 18px rgba(34,197,94,0.25);
-    }
-
-    /* WIP: amber pop */
-    .status.wip{
-      border-color: rgba(245,158,11,0.70);
-      color: #fff7ed;
-      background: rgba(245,158,11,0.10);
-      box-shadow:
-        0 0 0 3px rgba(245,158,11,0.10),
-        0 0 18px rgba(245,158,11,0.20);
-    }
-
-    /* BETA: cool cyan glow */
-    .status.beta{
-      border-color: rgba(34,211,238,0.70);
-      color: #cffafe;
-      background: rgba(34,211,238,0.10);
-      box-shadow:
-        0 0 0 3px rgba(34,211,238,0.10),
-        0 0 18px rgba(34,211,238,0.22);
-    }
-
-    /* Optional: PAUSED */
-    .status.paused{
-      border-color: rgba(168,85,247,0.70);
-      color: #f3e8ff;
-      background: rgba(168,85,247,0.10);
-      box-shadow:
-        0 0 0 3px rgba(168,85,247,0.10),
-        0 0 18px rgba(168,85,247,0.22);
-    }
-
-    /* Optional: DEAD/ARCHIVED */
-    .status.archived{
-      border-color: rgba(239,68,68,0.70);
-      color: #fee2e2;
-      background: rgba(239,68,68,0.10);
-      box-shadow:
-        0 0 0 3px rgba(239,68,68,0.10),
-        0 0 18px rgba(239,68,68,0.20);
-    }
-
-    .cardActions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-      position: relative;
-      z-index: 1;
-    }
-
-    .link {
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 900;
-    }
-    .link:hover{ text-decoration: underline; }
-
-    .button.disabled {
-      background: #2a3442;
-      color: #9aa4b2;
-      cursor: not-allowed;
-      box-shadow: none;
-    }
-
-    .empty {
-      color: var(--muted);
-      padding: 1.5rem;
-      border: 1px dashed var(--border);
-      border-radius: 14px;
-      background: var(--panel2);
-    }
-
-    footer {
-      text-align: center;
-      padding: 3rem 1rem;
-      color: #6b7280;
-      font-size: 0.85rem;
-    }
-  
-    @keyframes bannerPulse{
-      0%,100%{ filter: brightness(1); }
-      50%{ filter: brightness(1.15); }
-    }
-    .banner{ animation: bannerPulse 3.2s ease-in-out infinite; }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b0f18" />
+  <title>ElevAI Labs</title>
+  <link rel="icon" href="./assets/favicon.png" />
+  <link rel="stylesheet" href="./labs.css" />
 </head>
+
 <body>
+  <!-- Ambient background canvas -->
+  <canvas id="bg" aria-hidden="true"></canvas>
 
-<header>
-  <h1>ElevAI Labs 🧪</h1>
-  <p>
-    A modular lab of experiments, tools, and small apps (“molecules”) ⚗️  
-    built to explore ideas & test hypotheses.
-  </p>
+  <!-- Soft grain/scanline overlays -->
+  <div class="overlay overlay-scan" aria-hidden="true"></div>
+  <div class="overlay overlay-grain" aria-hidden="true"></div>
 
-  <a href="./submit/" class="button">
-    Submit an App Idea 💡
-  </a>
-</header>
+  <header class="hero">
+    <div class="hero-inner">
+      <div class="reactor" aria-hidden="true">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="spark s1"></div>
+        <div class="spark s2"></div>
+        <div class="spark s3"></div>
+      </div>
 
-<div class="banner">
-  🚧 <strong>Site Under Construction</strong> 🥼 — New molecules are being engineered. Check back soon to watch the lab evolve 🧬🚀
-</div>
+      <div class="brand">
+        <h1>ElevAI Labs <span class="emoji">🧪</span></h1>
+        <p class="sub">
+          A modular lab of experiments,tools,and small apps (“molecules” 🧬) built to explore ideas & test hypotheses.
+        </p>
 
-<main>
-  <div class="controls">
-    <input id="search" type="search" placeholder="Search molecules… 🔎" autocomplete="off" />
-    <div id="filters" class="filters"></div>
-  </div>
+        <div class="cta-row">
+          <a class="btn primary" href="./intake/" id="submitIdea">
+            Submit an App Idea <span class="emoji">💡</span>
+          </a>
+          <button class="btn ghost" id="randomMolecule" type="button">
+            Random Molecule <span class="emoji">🎲</span>
+          </button>
+        </div>
 
-  <div id="statusLine" class="statusLine">Loading experiments… 🔬</div>
+        <div class="ticker" role="status" aria-live="polite">
+          <span class="warn">🚧</span>
+          <strong>Site Under Construction</strong>
+          <span class="sep">—</span>
+          <span class="muted">New molecules are being engineered. Check back soon to watch the lab evolve</span>
+          <span class="emoji">🧬🚀</span>
+        </div>
+      </div>
+    </div>
+  </header>
 
-  <section id="moleculeGrid" class="grid"></section>
-</main>
+  <main class="wrap">
+    <section class="controls">
+      <div class="search">
+        <span class="icon">🔎</span>
+        <input id="searchInput" type="search" placeholder="Search molecules..." autocomplete="off" />
+        <button class="clear" id="clearSearch" type="button" aria-label="Clear search">✕</button>
+      </div>
 
-<script src="labs.js"></script>
+      <div class="chips" id="chipRow" aria-label="Category filters">
+        <!-- populated by JS -->
+      </div>
 
-<footer>
-    © <span id="year"></span> ElevAI Labs 🧠 • Built in Public 🛠️ • ·
-        <a href="https://elevaistrategies.github.io/home/" target="_blank" rel="noopener">Home 🏡 </a>
-</footer>
+      <div class="meta">
+        <span id="countLabel" class="count">0 molecules loaded 🧬</span>
+        <span class="dot"></span>
+        <span id="hintLabel" class="hint">Tip: hover a card… it bites back 😈</span>
+      </div>
+    </section>
 
+    <section id="grid" class="grid" aria-label="Molecule cards">
+      <!-- populated by JS -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>© ElevAI Labs 🧠 · Built in Public 🛠</span>
+      <span class="sep">·</span>
+      <a href="https://elevaistrategies.com" class="footer-link">Home 🏠</a>
+      <!-- Optional socials in footer later -->
+      <!-- <span class="sep">·</span>
+      <a class="footer-link" href="...">Instagram</a> -->
+    </div>
+  </footer>
+
+  <script src="./labs.js"></script>
 </body>
 </html>
