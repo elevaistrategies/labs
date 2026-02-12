@@ -29,10 +29,9 @@ function badge(status) {
 }
 
 function canLaunch(m) {
-  const s = String(m.status || "").toLowerCase().trim();
-  const launchable = s === "live" || s === "beta";
+  const live = String(m.status || "").toLowerCase().trim() === "live";
   const url = String(m.url || "").trim();
-  return launchable && url && url !== "#";
+  return live && url && url !== "#";
 }
 
 function getCategories(items) {
@@ -74,7 +73,7 @@ function cardHTML(m) {
   const url = String(m.url || "").trim();
 
   return `
-  <article class="card" data-status="${escapeHtml(String(m.status || \"\").toLowerCase().trim() || \"live\")}" data-title="${escapeHtml(title)}" data-cat="${escapeHtml(cat)}">
+  <article class="card" data-title="${escapeHtml(title)}" data-cat="${escapeHtml(cat)}">
     <div class="card-inner">
       <div class="kicker">
         <div class="cat">${escapeHtml(cat)}</div>
