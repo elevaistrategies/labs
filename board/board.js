@@ -43,7 +43,6 @@ async function fetchIssues(){
   if(!res.ok) throw new Error(`Failed to load board (${res.status})`);
   const items = await res.json();
 
-  // filter out PRs + keep only idea issues
   return items
     .filter(x => !x.pull_request)
     .filter(x => (x.labels || []).some(l => (l.name || l).toString() === "idea"))
@@ -98,11 +97,11 @@ function renderList(items, q, status){
   }
 
   list.innerHTML = filtered.map(i => {
-      const meta = metaForStatus(i.status);
-      const idx = Math.max(0, statusOrder.indexOf(i.status));
-      const pct = Math.round((idx / (statusOrder.length - 1)) * 100);
+    const meta = metaForStatus(i.status);
+    const idx = Math.max(0, statusOrder.indexOf(i.status));
+    const pct = Math.round((idx / (statusOrder.length - 1)) * 100);
 
-      return `
+    return `
       <div class="card status-${escapeHtml(i.status)}" style="--glow:${meta.color}">
         <div class="top">
           <span class="tag">${escapeHtml(i.category)}</span>
@@ -131,7 +130,6 @@ function renderList(items, q, status){
     foot.textContent = "Loading…";
     const items = await fetchIssues();
 
-    // sort: most recently updated first
     items.sort((a,b) => new Date(b.updated) - new Date(a.updated));
 
     renderCounts(items);
