@@ -218,14 +218,56 @@ p{margin:0;color:var(--muted);line-height:1.45}
 .bgFX{position:fixed;inset:0;pointer-events:none;z-index:-1;filter:saturate(1.05)}
 
 .bgFX .grid{
-  position:absolute;inset:-40%;
+  position:absolute;
+  inset:-40%;
   background:
-    repeating-linear-gradient(0deg, rgba(197,222,245,.05) 0 1px, transparent 1px 46px),
-    repeating-linear-gradient(90deg, rgba(0,82,204,.045) 0 1px, transparent 1px 58px);
-  opacity:.55;
+    /* Vertical base lines */
+    repeating-linear-gradient(
+      0deg,
+      rgba(125,211,252,.06) 0 1px,
+      transparent 1px 48px
+    ),
+
+    /* Horizontal deep blue */
+    repeating-linear-gradient(
+      90deg,
+      rgba(0,82,204,.05) 0 1px,
+      transparent 1px 60px
+    ),
+
+    /* Violet accents */
+    repeating-linear-gradient(
+      0deg,
+      rgba(139,92,246,.035) 0 1px,
+      transparent 1px 120px
+    ),
+
+    /* Reactor yellow accents */
+    repeating-linear-gradient(
+      90deg,
+      rgba(251,202,4,.03) 0 1px,
+      transparent 1px 160px
+    ),
+
+    /* Beta orange sparse lines */
+    repeating-linear-gradient(
+      0deg,
+      rgba(249,115,22,.025) 0 1px,
+      transparent 1px 200px
+    ),
+
+    /* Shipped green rare highlights */
+    repeating-linear-gradient(
+      90deg,
+      rgba(14,138,22,.025) 0 1px,
+      transparent 1px 240px
+    );
+
+  opacity:.75;
   transform:skewY(-8deg);
   animation:gridPan 22s linear infinite;
 }
+
 @keyframes gridPan{
   0%{transform:translate3d(-3%, -2%, 0) skewY(-8deg)}
   100%{transform:translate3d(3%, 2%, 0) skewY(-8deg)}
