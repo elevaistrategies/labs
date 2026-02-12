@@ -215,7 +215,7 @@ p{margin:0;color:var(--muted);line-height:1.45}
 }
 
 /* ========= Mission Control Background FX (RESTORED) ========= */
-.bgFX{position:fixed;inset:0;pointer-events:none;z-index:-1;filter:saturate(1.05)}
+.bgFX{position:fixed;inset:0;pointer-events:none;z-index:-1;filter:saturate(1.00)}
 
 .bgFX .grid{
   position:absolute;
