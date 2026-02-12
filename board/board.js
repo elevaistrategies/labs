@@ -23,7 +23,6 @@ function metaForStatus(s){
   return statusMeta[s] || { label: (s||"").toString(), color: "#7dd3fc", emoji: "🧷" };
 }
 
-
 function pickStatus(labels){
   const s = labels.find(l => l.startsWith("status:"));
   return s ? s.replace("status:","") : "submitted";
@@ -75,10 +74,11 @@ function renderCounts(items){
 
   const el = document.getElementById("counts");
   el.innerHTML = statusOrder.map(s => {
-    const label = s.charAt(0).toUpperCase() + s.slice(1);
     const meta = metaForStatus(s);
+
+    // ✅ Emoji AFTER the word (COUNT • Label • Emoji)
     return `<span class="chip chip--${s}" style="--chip:${meta.color}">
-      <strong>${counts[s]||0}</strong> ${escapeHtml(meta.emoji)} ${escapeHtml(meta.label)}
+      <strong>${counts[s]||0}</strong> ${escapeHtml(meta.label)} ${escapeHtml(meta.emoji)}
     </span>`;
   }).join("");
 }
