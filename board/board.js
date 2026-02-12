@@ -23,6 +23,27 @@ function metaForStatus(s){
   return statusMeta[s] || { label: (s||"").toString(), color: "#7dd3fc", emoji: "🧷" };
 }
 
+function enhanceDropdown(){
+  const select = document.getElementById("status");
+  if(!select) return;
+
+  [...select.options].forEach(opt => {
+    const value = opt.value;
+
+    if(value === "all"){
+      opt.textContent = "All statuses 🌐";
+      return;
+    }
+
+    const meta = metaForStatus(value);
+    if(meta){
+      // Emoji AFTER the word
+      opt.textContent = `${meta.label} ${meta.emoji}`;
+    }
+  });
+}
+
+
 function pickStatus(labels){
   const s = labels.find(l => l.startsWith("status:"));
   return s ? s.replace("status:","") : "submitted";
@@ -133,6 +154,7 @@ function renderList(items, q, status){
     items.sort((a,b) => new Date(b.updated) - new Date(a.updated));
 
     renderCounts(items);
+    enhanceDropdown();
     renderList(items, "", "all");
     foot.textContent = `Showing up to ${MAX_ITEMS} ideas. Updated automatically.`;
 
