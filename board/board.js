@@ -8,6 +8,22 @@ const MAX_ITEMS = 60;
 
 const statusOrder = ["submitted","reviewing","accepted","building","beta","shipped","declined"];
 
+// Status styling + emoji system (matches your GitHub label colors)
+const statusMeta = {
+  submitted: { label: "Submitted",  color: "#c5def5", emoji: "❄️" },
+  reviewing: { label: "Reviewing",  color: "#0052cc", emoji: "🧪" },
+  accepted:  { label: "Accepted",   color: "#8b5cf6", emoji: "🧬" },
+  building:  { label: "Building",   color: "#fbca04", emoji: "☢️" },
+  beta:      { label: "Beta",       color: "#f97316", emoji: "🧫" },
+  shipped:   { label: "Shipped",    color: "#0e8a16", emoji: "🚀" },
+  declined:  { label: "Declined",   color: "#b60205", emoji: "🛑" },
+};
+
+function metaForStatus(s){
+  return statusMeta[s] || { label: (s||"").toString(), color: "#7dd3fc", emoji: "🧷" };
+}
+
+
 function pickStatus(labels){
   const s = labels.find(l => l.startsWith("status:"));
   return s ? s.replace("status:","") : "submitted";
@@ -60,7 +76,10 @@ function renderCounts(items){
   const el = document.getElementById("counts");
   el.innerHTML = statusOrder.map(s => {
     const label = s.charAt(0).toUpperCase() + s.slice(1);
-    return `<span class="chip"><strong>${counts[s]||0}</strong> ${escapeHtml(label)}</span>`;
+    const meta = metaForStatus(s);
+    return `<span class="chip chip--${s}" style="--chip:${meta.color}">
+      <strong>${counts[s]||0}</strong> ${escapeHtml(meta.emoji)} ${escapeHtml(meta.label)}
+    </span>`;
   }).join("");
 }
 
@@ -79,14 +98,25 @@ function renderList(items, q, status){
   }
 
   list.innerHTML = filtered.map(i => {
-    return `
-      <div class="card">
+      const meta = metaForStatus(i.status);
+      const idx = Math.max(0, statusOrder.indexOf(i.status));
+      const pct = Math.round((idx / (statusOrder.length - 1)) * 100);
+
+      return `
+      <div class="card status-${escapeHtml(i.status)}" style="--glow:${meta.color}">
         <div class="top">
           <span class="tag">${escapeHtml(i.category)}</span>
-          <span class="status">${escapeHtml(i.status.toUpperCase())}</span>
+          <span class="status status--${escapeHtml(i.status)}" style="--st:${meta.color}">
+            ${escapeHtml(meta.emoji)} ${escapeHtml(i.status.toUpperCase())}
+          </span>
         </div>
+
         <h3>${escapeHtml(i.title)}</h3>
         <p>${escapeHtml(summarize(i.body) || "No description provided.")}</p>
+
+        <div class="prog" aria-hidden="true" title="${escapeHtml(meta.label)}">
+          <span style="width:${pct}%; background:${meta.color}"></span>
+        </div>
       </div>
     `;
   }).join("");
