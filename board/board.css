@@ -220,53 +220,75 @@ p{margin:0;color:var(--muted);line-height:1.45}
 .bgFX .grid{
   position:absolute;
   inset:-40%;
+
+  /* More visible spectrum grid: base thin lines + occasional thicker neon rails */
   background:
-    /* Vertical base lines */
+    /* BASE: fine grid (cool cyan) */
     repeating-linear-gradient(
       0deg,
-      rgba(125,211,252,.06) 0 1px,
-      transparent 1px 48px
+      rgba(125,211,252,.085) 0 1px,
+      transparent 1px 44px
     ),
-
-    /* Horizontal deep blue */
     repeating-linear-gradient(
       90deg,
-      rgba(0,82,204,.05) 0 1px,
-      transparent 1px 60px
+      rgba(125,211,252,.07) 0 1px,
+      transparent 1px 56px
     ),
 
-    /* Violet accents */
+    /* RAILS: thicker accent lines (violet) */
     repeating-linear-gradient(
       0deg,
-      rgba(139,92,246,.035) 0 1px,
-      transparent 1px 120px
+      rgba(139,92,246,.12) 0 2px,
+      transparent 2px 180px
     ),
-
-    /* Reactor yellow accents */
     repeating-linear-gradient(
       90deg,
-      rgba(251,202,4,.03) 0 1px,
-      transparent 1px 160px
+      rgba(139,92,246,.10) 0 2px,
+      transparent 2px 220px
     ),
 
-    /* Beta orange sparse lines */
+    /* RAILS: reactor yellow */
     repeating-linear-gradient(
       0deg,
-      rgba(249,115,22,.025) 0 1px,
-      transparent 1px 200px
+      rgba(251,202,4,.10) 0 2px,
+      transparent 2px 260px
     ),
-
-    /* Shipped green rare highlights */
     repeating-linear-gradient(
       90deg,
-      rgba(14,138,22,.025) 0 1px,
-      transparent 1px 240px
+      rgba(251,202,4,.085) 0 2px,
+      transparent 2px 300px
+    ),
+
+    /* RAILS: beta orange */
+    repeating-linear-gradient(
+      0deg,
+      rgba(249,115,22,.085) 0 2px,
+      transparent 2px 360px
+    ),
+
+    /* RAILS: shipped green */
+    repeating-linear-gradient(
+      90deg,
+      rgba(14,138,22,.08) 0 2px,
+      transparent 2px 420px
+    ),
+
+    /* RARE: declined red blink lines (very sparse) */
+    repeating-linear-gradient(
+      0deg,
+      rgba(182,2,5,.06) 0 2px,
+      transparent 2px 520px
     );
 
-  opacity:.75;
+  opacity:.92;
+
+  /* Make the color separation pop without affecting the whole page */
+  filter:saturate(1.35) contrast(1.08);
+
   transform:skewY(-8deg);
   animation:gridPan 22s linear infinite;
 }
+
 
 @keyframes gridPan{
   0%{transform:translate3d(-3%, -2%, 0) skewY(-8deg)}
