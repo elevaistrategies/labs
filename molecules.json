@@ -14,5 +14,13 @@
     "description": "Random thoughts that range from funny to philosophical.",
     "url": "https://elevaistrategies.github.io/molecule-shower-thoughts/",
     "status": "live"
-  }
+},
+  {
+  "id": "vertical-jump-analyzer",
+  "name": "Vertical Jump Analyzer",
+  "category": "Fitness",
+  "description": "Check you jump height against gravity.",
+  "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
+  "status": "WIP"
+},
 ]
