@@ -19,7 +19,7 @@
   "id": "vertical-jump-analyzer",
   "name": "Vertical Jump Analyzer",
   "category": "Fitness",
-  "description": "Check you jump height against gravity.",
+  "description": "Test Your vertical against gravity.",
   "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
   "status": "WIP"
 }
