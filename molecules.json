@@ -1,26 +1,29 @@
 [
-{
-  "id": "snack-to-workout",
-  "name": "Snack → Workout Converter",
-  "category": "Fitness",
-  "description": "Convert snack calories into equivalent workouts.",
-  "url": "https://elevaistrategies.github.io/molecule-snack-to-workout/",
-  "status": "live"
-},
+  {
+    "id": "snack-to-workout",
+    "name": "Snack → Workout Converter",
+    "category": "Fitness",
+    "description": "Convert snack calories into equivalent workouts.",
+    "url": "https://elevaistrategies.github.io/molecule-snack-to-workout/",
+    "status": "live",
+    "version": "v1.3.0"
+  },
   {
     "id": "shower-thoughts",
     "name": "Shower Thought Generator",
     "category": "Mindset",
     "description": "Random thoughts that range from funny to philosophical.",
     "url": "https://elevaistrategies.github.io/molecule-shower-thoughts/",
-    "status": "live"
-},
+    "status": "beta",
+    "version": "v0.9.2"
+  },
   {
-  "id": "vertical-jump-analyzer",
-  "name": "Vertical Jump Analyzer",
-  "category": "Fitness",
-  "description": "Test your vertical against gravity.",
-  "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
-  "status": "WIP"
-}
+    "id": "vertical-jump-analyzer",
+    "name": "Vertical Jump Analyzer",
+    "category": "Fitness",
+    "description": "Test your vertical against gravity.",
+    "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
+    "status": "wip",
+    "version": "v0.2.0"
+  }
 ]
