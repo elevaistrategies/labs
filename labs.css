@@ -416,6 +416,13 @@ h1{
 .kicker{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
 .cat{font-size:12px;letter-spacing:.2px;color:rgba(233,238,252,.75);opacity:.95}
 
+.statusWrap{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:4px;
+  line-height:1;
+}
 .status{
   font-size:11px;
   padding:7px 10px;
@@ -432,10 +439,19 @@ h1{
   background:rgba(233,238,252,.55);
   box-shadow:0 0 16px rgba(233,238,252,.35);
 }
+.version{
+  font-size:10px;
+  letter-spacing:.2px;
+  color:rgba(233,238,252,.70);
+  opacity:.9;
+  padding:0 2px;
+}
 .status[data-status="live"]{border-color:rgba(46,229,157,.25);background:rgba(46,229,157,.08)}
 .status[data-status="live"]::before{background:var(--good);box-shadow:0 0 18px rgba(46,229,157,.55);animation:pulse 1.6s ease-in-out infinite}
 .status[data-status="wip"]{border-color:rgba(251,191,36,.25);background:rgba(251,191,36,.08)}
 .status[data-status="wip"]::before{background:var(--warn);box-shadow:0 0 18px rgba(251,191,36,.40);animation:pulse 2.1s ease-in-out infinite}
+.status[data-status="beta"]{border-color:rgba(106,215,255,.25);background:rgba(106,215,255,.08)}
+.status[data-status="beta"]::before{background:var(--accent);box-shadow:0 0 18px rgba(106,215,255,.45);animation:pulse 1.9s ease-in-out infinite}
 @keyframes pulse{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.25);opacity:1}}
 
 .title{margin:0 0 8px;font-size:20px}
