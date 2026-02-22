@@ -23,15 +23,39 @@ function toast(msg) {
   toast._timer = setTimeout(() => t.classList.remove("show"), 1100);
 }
 
-function badge(status) {
-  const s = String(status || "").toLowerCase().trim() || "live";
-  return `<span class="status" data-status="${escapeHtml(s)}">${escapeHtml(s.toUpperCase())}</span>`;
+function normalizeStatus(m) {
+  // Backwards-compatible: supports existing `status`, plus optional `stage`
+  const raw = String(m?.stage ?? m?.status ?? "").toLowerCase().trim();
+  if (!raw) return "live";
+  if (raw === "work in progress" || raw === "in-progress" || raw === "inprogress") return "wip";
+  if (raw === "beta") return "beta";
+  if (raw === "wip") return "wip";
+  if (raw === "live") return "live";
+  // allow custom statuses, but they'll render "as-is"
+  return raw;
 }
 
+function isLaunchableStatus(s) {
+  return s === "live" || s === "beta";
+}
+
+function badgeFor(m) {
+  const s = normalizeStatus(m);
+  // Display label: optional `badge` overrides, otherwise status text
+  const label = String(m?.badge ?? s).toUpperCase();
+  const version = String(m?.version ?? "").trim();
+
+  return `
+    <span class="statusWrap">
+      <span class="status" data-status="${escapeHtml(s)}">${escapeHtml(label)}</span>
+      ${version ? `<span class="version">${escapeHtml(version)}</span>` : ""}
+    </span>
+  `;
+}
 function canLaunch(m) {
-  const live = String(m.status || "").toLowerCase().trim() === "live";
+  const s = normalizeStatus(m);
   const url = String(m.url || "").trim();
-  return live && url && url !== "#";
+  return isLaunchableStatus(s) && url && url !== "#";
 }
 
 function getCategories(items) {
@@ -77,7 +101,7 @@ function cardHTML(m) {
     <div class="card-inner">
       <div class="kicker">
         <div class="cat">${escapeHtml(cat)}</div>
-        ${badge(m.status)}
+        ${badgeFor(m)}
       </div>
 
       <h3 class="title">${escapeHtml(title)}</h3>
