@@ -6,7 +6,7 @@
     "description": "Convert snack calories into equivalent workouts.",
     "url": "https://elevaistrategies.github.io/molecule-snack-to-workout/",
     "status": "live",
-    "version": "v1.3.0"
+    "version": "v1.3"
   },
   {
     "id": "shower-thoughts",
@@ -15,7 +15,7 @@
     "description": "Random thoughts that range from funny to philosophical.",
     "url": "https://elevaistrategies.github.io/molecule-shower-thoughts/",
     "status": "beta",
-    "version": "v0.9.2"
+    "version": "v0.9"
   },
   {
     "id": "vertical-jump-analyzer",
@@ -24,6 +24,6 @@
     "description": "Test your vertical against gravity.",
     "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
     "status": "wip",
-    "version": "v0.2.0"
+    "version": "v0.0"
   }
 ]
