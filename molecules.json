@@ -23,7 +23,7 @@
     "category": "Fitness",
     "description": "Test your vertical against gravity.",
     "url": "https://elevaistrategies.github.io/molecule-vertical-jump-analyzer/",
-    "status": "wip",
-    "version": "v0.0"
+    "status": "beta",
+    "version": "v1.1"
   }
 ]
