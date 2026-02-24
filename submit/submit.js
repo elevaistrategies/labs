@@ -1,5 +1,5 @@
 // ====== CONFIG (edit these) ======
-const N8N_WEBHOOK_URL = "https://YOUR-N8N-DOMAIN/webhook/idea-intake?key=YOUR_LONG_SECRET";
+const N8N_WEBHOOK_URL = "http://localhost:5678/webhook/idea-intake";
 const INTAKE_BOARD_URL = "../board/"; // public board
 // =================================
 
