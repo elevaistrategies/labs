@@ -548,3 +548,12 @@ body::before{
 @media (prefers-reduced-motion: reduce){
   .card::before,.side .panel::before,.stat::before{animation:none !important}
 }
+select {
+  color: #ffffff;
+  background-color: #0f172a;
+}
+
+select option {
+  background: #0f172a;
+  color: #ffffff;
+}
