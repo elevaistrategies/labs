@@ -204,13 +204,18 @@ form.addEventListener("submit", async (e) => {
 
     const res = await fetch(N8N_WEBHOOK_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", "Accept": "application/json" },
       body: JSON.stringify(payload),
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    let data = {};
+    try { data = await res.json(); } catch (e) { data = {}; }
 
-    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const reason = data.reason || data.message || `HTTP ${res.status}`;
+      throw new Error(reason);
+    }
+
 
     // If your n8n returns issueUrl / issueNumber, we’ll show it
     const issueUrl = data.issueUrl || data.url || "";
@@ -231,7 +236,7 @@ form.addEventListener("submit", async (e) => {
     form.reset();
   } catch(err){
     console.error(err);
-    showStatus("bad", "❌ Couldn’t submit right now. Try again in a minute.");
+    showStatus("bad", `❌ Couldn’t submit right now.<br/><span class="muted">${(err && err.message) ? err.message : "Please try again in a minute."}</span>`);
     submitBtn.classList.add("fail");
     burstAt(bx, by, { count: 12, emojis: ["❌","⚠️","🧯","✨"] });
   } finally{
